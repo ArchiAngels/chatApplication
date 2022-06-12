@@ -8,7 +8,7 @@ import {
 
 import App from "./App.jsx";
 
-// import Expenses from "./routes/expenses.jsx";
+import Welcome from "./routes/welcome.jsx";
 // import Invoices from "./routes/invoices.jsx";
 // import Nav from "./components/NavBar/Nav.jsx";
 
@@ -20,9 +20,8 @@ root.render(
   <BrowserRouter>
     {/* <Nav/> */}
     <Routes>
-      <Route path="*" element={<App />} />
-      {/* <Route path="expenses" element={<Expenses />} />
-      <Route path="invoices" element={<Invoices />} /> */}
+      <Route path="/chat" element={<App />} />
+      <Route path="/firstContact" element = {<Welcome />}/>
     </Routes>
   </BrowserRouter>
 );

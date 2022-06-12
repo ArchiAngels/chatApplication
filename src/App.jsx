@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import Message from './components/chat/message.jsx';
+import EnterMessage from './components/chat/enterMessage.jsx';
 
 let w_chat = 60;
 let h_chat = 80;
@@ -50,29 +51,6 @@ const HistoryOfChat_custom = styled.div`
 
 `;
 
-
-
-const TextArea_custom = styled.textarea`
-
-    width:${w_chat}vw;
-    height:${h_chat * 0.1}vh;
-    background:#f9f9f9;
-
-    padding:5px 20px 0 20px;
-
-    border:none;
-    resize:none;
-    transition:background 0.15s;
-
-    &:focus{
-        outline:none;
-        border:none;
-        background:#f1f1f1;
-    }
-
-`;
-
-
 export default function App() {
 
     let [messages,setMessages] = React.useState([])
@@ -80,27 +58,9 @@ export default function App() {
     let YourName = 'You';
 
 
-    function HadleSubmitMessage(e){
-        if(e.key == 'Enter'){
-            let msg = e.target.value;
-            // console.log(msg);
-            let newMess = CreateObjMess(msg,YourName,true);
-            setMessages([...messages,newMess]);
-            e.target.value = '';
-        }else{
-            return;
-        }
-    }
+    
 
-    function CreateObjMess(mess,who,MySelf = false){
-        let DATE = new Date();
-        return {
-            msg:mess,
-            who:who,
-            time:{h:DATE.getHours(),m:DATE.getMinutes()},
-            myself:MySelf,
-        }
-    }
+    
 
     return <>
         <Wrapper>
@@ -111,7 +71,7 @@ export default function App() {
                             return <Message who={e.who} msg={e.msg} time={e.time} myself={e.myself} key={i+'x'}/>
                         })}
                     </HistoryOfChat_custom>
-                    <TextArea_custom placeholder='Start messaging' onKeyUp={(e)=>{HadleSubmitMessage(e)}}/>
+                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName}/>
                 </Chat_container>
             {/* </Title> */}
         </Wrapper>
