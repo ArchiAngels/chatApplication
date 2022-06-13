@@ -36,9 +36,31 @@ let SendButton = styled.input`
   height:50px;
   padding:1rem;
   border-radius:10px;
+  border:1px solid #000;
   background:#fff;
   outline:none;
+  transition:transform 0.15s;
+  &:hover{
+    cursor:pointer;
+  }
+  &:active{
+    transform:translateY(10px);
+  }
 
+`;
+
+let ShowPasswordParagraph = styled.p`
+  text-align:center;
+  padding:1rem;
+  display:block;
+  border:1px solid #000;
+  transition:transform 0.15s;
+  &:hover{
+    cursor:pointer
+  }
+  &:active{
+    transform:translateY(10px);
+  }
 `;
 
 
@@ -86,7 +108,7 @@ export default function Welcome() {
         <div className="formWrap">
           <form method="POST" action="/api/createNewUser" onSubmit={e => {HandleSubmit(e)}}>
               <InputForm width={200} height ={30} id={'nickname'} labelValue={'Nick name'}/>
-              <InputForm width={200} height ={30}id={'password'} labelValue={'Password'}/>
+              <InputForm width={200} height ={30} id={'password'} labelValue={'Password'} needIconChanger ={true}/>
 
               <SendButton type="submit" value='Send' />
           </form>

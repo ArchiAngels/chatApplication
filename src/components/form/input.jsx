@@ -5,11 +5,13 @@ import styled from "styled-components";
 //  width & height : {number}
 //  id = htmlFor : {string}
 //  labelValue : {string}
-// 
-// 
+//  type : {string} default 'text' DEPRECATED
+//  needIconChanger : {bool} default 'false' - add svg icons to change {type} of input
 // 
 // 
 
+import Hidden from '../../../client/assets/svg/hidden.svg';
+import Showed from '../../../client/assets/svg/showed.svg';
 
 
 let InputForm = styled.input`
@@ -37,10 +39,50 @@ let LabelForm = styled.label`
     font-weight:bold;
 `;
 
+let WrapIcon = styled.div`
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    // border:1px solid #000;
+    position:absolute;
+    display:flex;
+    justify-content:center;
+    margin-top:-3rem;
+    margin-left:17rem;
+    background:#fff;
+    transition:transform 0.15s;
+    &:hover{
+        cursor:pointer;
+    }
+    &:active{
+        transform:translateY(10px);
+    }
+`;
+
+function IconChanger(props){
+
+    return <>
+        <WrapIcon onClick = {()=>{props.change(!props.currentIcon)}}>
+            <img alt="eye icon" src={props.currentIcon ? Hidden: Showed} />
+        </WrapIcon>
+        
+    </>
+}
+
 export default function Input(props){
+
+    let [isVisible,setVisible] = React.useState(false);
+
+    props.needIconChanger ? props.needIconChanger : false;
+
+    let conditionTypeInput = props.needIconChanger 
+                                ? isVisible 
+                                    ? 'text' : 'password'
+                                : 'text';
 
     return <>
         <LabelForm htmlFor={props.id} >{props.labelValue}</LabelForm>
-        <InputForm width={props.width} height={props.height} id={props.id}/>
+        <InputForm width={props.width} height={props.height} id={props.id} type={conditionTypeInput}/>
+        {props.needIconChanger ? <IconChanger change={setVisible} currentIcon={isVisible}/> :""}
     </>
 }
