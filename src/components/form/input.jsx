@@ -82,7 +82,7 @@ export default function Input(props){
 
     return <>
         <LabelForm htmlFor={props.id} >{props.labelValue}</LabelForm>
-        <InputForm width={props.width} height={props.height} id={props.id} type={conditionTypeInput}/>
+        <InputForm width={props.width} height={props.height} id={props.id} type={conditionTypeInput} defaultValue={props.dfv}/>
         {props.needIconChanger ? <IconChanger change={setVisible} currentIcon={isVisible}/> :""}
     </>
 }

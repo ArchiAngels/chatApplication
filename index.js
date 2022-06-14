@@ -1,6 +1,6 @@
 require('dotenv').config();
 const PATH = require('path');
-const api = require('./backend/Routers/default-web-app.js');
+const api = require('./backend/api/apiUser.js');
 
 const server = require('express');
 const app = server();
@@ -12,13 +12,8 @@ app.listen(port,()=>{
 
 app.use(server.static(PATH.join(__dirname,'/client')))
 
-app.get('/api',api);
+app.use('/api',api);
 
-// app.get('/',(req,res)=>{
-//     // let html = PATH.join(__dirname,'index.html');
-//     // res.sendFile(html);
-//     res.redirect('/firstContact');
-// })
 app.get('*',(req,res)=>{
     let url = req.url;
     if(url === '/'){
