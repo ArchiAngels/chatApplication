@@ -13,7 +13,7 @@ router.post('/createNewUser',(req,res)=>{
   req.on('data',async (chunk)=>{
     chunk = chunk+'';
     result = await createNewUser(chunk);
-    res.json({status:'ok',value:result.idUser});
+    res.json({status:'ok',value:result});
   })
   
 });

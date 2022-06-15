@@ -20,6 +20,6 @@ export default function(method,url,value,callback){
         xhr.send(body);
         xhr.onload = ()=>{
           console.log(xhr.responseText , xhr.status);
-          callback();
+          callback(xhr);
         }
 }

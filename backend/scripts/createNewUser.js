@@ -1,20 +1,28 @@
 module.exports = function(datauser){
-    const queryDb = require('./openDB.js');
+    const getId = require('./idManagment/getIdConstant.js');
+    const setId = require('./idManagment/updateIdConstant.js');
     let msg = `Passed data in CreatenewUser :: ${datauser}`;
     console.log(msg);
-    return new Promise(function(resolve,reject){
-        let timeOver = setTimeout(()=>{
-            reject('Time out 5.0s create user')
-        },5000);
+    return new Promise(async function(resolve,reject){
 
-        let result = queryDb();
-        clearTimeout(timeOver);
-        resolve(result);
+        let result = await getId();
+        
+        if(result.isOK){
+            resolve(result);
+        }else{
+            reject(result);
+        }
 
 
-
-    }).catch((reason)=>{
-        let msg = `Rejected by ${reason}`;
-        console.log(msg)
-    })
+    }).then(
+        function(value){
+            console.log(value);
+            return {isOk:true,body:value};
+        },
+        function(error){
+            let msg = `Rejected by ${error.why}`;
+            console.log(msg);
+            return {isOk:false,why:error};
+        }
+    )
 }

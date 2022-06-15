@@ -4,6 +4,7 @@ import Send from '../scripts/loginSender.js';
 
 
 import InputForm from '../components/form/input.jsx';
+import Alert from '../components/alerts/error.jsx';
 
 
 let WrapContent = styled.div`
@@ -67,6 +68,7 @@ let ShowPasswordParagraph = styled.p`
 
 export default function Welcome() {
   // let [answer,setAnswer] = React.useState(false);
+  let [msgAlert,setmsgAlert] = React.useState('');
 
   // if(answer === true){
   //   window.location.replace('/chat');
@@ -96,8 +98,10 @@ export default function Welcome() {
       console.log('SWEET WORK');
     });
 
-    Send(method, "/api/createNewUser",values,()=>{
+    Send(method, "/api/createNewUser",values,(xhr)=>{
       console.log('SWEET WORK 22');
+      console.log(xhr.status);
+      setmsgAlert(xhr.responseStatus)
     });
   }
 
@@ -118,8 +122,8 @@ export default function Welcome() {
               <SendButton type="submit" value='Send' />
           </form>
         </div>
-      </WrapContent>
-      
+        <Alert msg={msgAlert || "empty" }/>
+      </WrapContent>      
     </>
   }
   
