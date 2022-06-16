@@ -40,15 +40,24 @@ let SendButton = styled.input`
   height:50px;
   padding:1rem;
   border-radius:10px;
-  border:1px solid #000;
+  border:1px solid transparent;
   background:#fff;
   outline:none;
   transition:transform 0.15s;
-  &:hover{
-    cursor:pointer;
+ 
+  &:disabled{
+    // background:#00000055;
+    cursor:not-allowed;
+    border:1px dashed #000;
   }
-  &:active{
-    transform:translateY(10px);
+  &:not([disabled]){
+    border:1px solid #000;
+    &:hover{
+      cursor:pointer;
+    }
+    &:active{
+      transform:translateY(10px);
+    }
   }
 
 `;
@@ -72,7 +81,7 @@ export default function Welcome() {
 
   
   let [messages,setMessages] = React.useState([]);
-  let orderStack = [];
+  let [isLoading,setLoading] = React.useState(false);
 
 
   function HandleSubmit(e){
@@ -88,8 +97,7 @@ export default function Welcome() {
     let values = InputsValues(e);
 
     
-    orderStack.push(addToStack(method,values));
-    orderStack.shift()();
+    addToStack(method,values);
     // console.log(values);
 
     // Send(method, url,values,()=>{
@@ -100,21 +108,34 @@ export default function Welcome() {
   }
 
   function addToStack(method,values){
-    return ()=>{
-      Send(method, "/api/createNewUser",values,(xhr)=>{
-        console.warn('SWEET WORK 22',messages.length);
-        let parsedResponse = JSON.parse(xhr.responseText);
-        // console.log(parsedResponse);
-        addErrorToStack(parsedResponse.value.why.why);  
-      });
-    }
+    setLoading(true);
+
+    Send(method, "/api/createNewUser",values,(xhr)=>{
+
+      // console.warn('SWEET WORK 22',messages.length);
+
+      let parsedResponse = JSON.parse(xhr.responseText);
+      console.log(parsedResponse);
+
+      let condition = Math.random() > 0.5? true: false;
+      // console.log('condition',condition)
+
+      addErrorToStack(parsedResponse.value.why.why,condition);
+
+      setTimeout(()=>{
+        setLoading(false);
+      },1000);
+    });
+
+    
+
   }
   
 
-  function addErrorToStack(msg){
+  function addErrorToStack(msg,isOK){
     let currentTime = Date.now();
-    let timeExpires = 10000;
-    setMessages([...messages,{text:msg,timeExpire:currentTime + timeExpires}]);
+    let timeExpires = 5000;
+    setMessages([...messages,{text:msg,timeExpire:currentTime + timeExpires,isOK:isOK}]);
   }
 
 
@@ -127,7 +148,7 @@ export default function Welcome() {
               <InputForm width={200} height ={30} id={'nickname'} labelValue={'Nick name'} dfv={`archiangels`}/>
               <InputForm width={200} height ={30} id={'password'} labelValue={'Password'} needIconChanger ={true}  dfv={`passwordMe`}/>
 
-              <SendButton type="submit" value='Send' />
+              <SendButton type="submit" value='Send' disabled={isLoading}/>
           </form>
         </div>
         <Alerts messages={messages} setMessages={setMessages}/>      

@@ -4,8 +4,9 @@ import styled from "styled-components";
 let WrapAlertBox = styled.div`
     width:500px;
     height:150px;
-    display:flex;
-    justify-content:center;
+    // display:flex;
+    // justify-content:center;
+    // flex-direction:column;
     background:#fff;
     position:absolute;
     top:50px;
@@ -14,20 +15,26 @@ let WrapAlertBox = styled.div`
 
 let AlertsBox = styled.div`
 
+    // margin-bottom:50px;
+    padding:1rem;
 `;
 
 let Message = styled.h4`
     line-height:30px;
-    background:lightcoral;
+    
 `;
+
+let colorSucces = 'lightgreen';
+let colorError = 'lightcoral';
 
 export default function(props){
     let currentTime = Date.now();
-    let TickMS = 500;
+    let TickMS = 50;
 
-    let Tick = setTimeout(() => {
-        // checkAlerts();
-    }, TickMS);
+    // let Tick = setTimeout(() => {
+    //     checkAlerts();
+    // }, TickMS);
+    checkAlerts();
 
     function checkAlerts(){
         // console.log('Verifying');
@@ -35,7 +42,7 @@ export default function(props){
 
         if(props.messages.length == 0){
             // console.log('no one alerts');
-            clearTimeout(Tick);
+            // clearTimeout(Tick);
             return 0;
 
         }else if(props.messages[0].timeExpire <= currentTime){
@@ -49,6 +56,7 @@ export default function(props){
     }
     
     function DeleteClickedMessage(event){
+        // clearTimeout(Tick);
         let elementToDelete = event.target;
         let childrenOfThisParent = event.target.parentNode.children;
         let newMessages = [];
@@ -62,11 +70,18 @@ export default function(props){
     }
     return <>
         <WrapAlertBox>
-            <AlertsBox>
-                {props.messages.map((el,i)=>{
-                    return <Message key={ i + el.text } onClick={(e)=>{DeleteClickedMessage(e)}} >msg::{ el.text } <br /> will deleted::{ el.timeExpire } <br /> NUMER OF MESSAGE:{i}</Message>
-                })}                
-            </AlertsBox>
+            {props.messages.map((el,i)=>{
+                return <AlertsBox key={ i + el.text }>
+                            <Message 
+                                key={ i + el.text + i }
+                                onClick={(e)=>{DeleteClickedMessage(e)}}
+                                style={{background: el.isOK ? colorSucces : colorError}}
+                                >
+                                msg::{ el.text } <br /> will deleted::{ el.timeExpire } <br /> NUMER OF MESSAGE:{i}
+                            </Message>                             
+                        </AlertsBox>
+            })}   
+            
         </WrapAlertBox>
     </>
 }
