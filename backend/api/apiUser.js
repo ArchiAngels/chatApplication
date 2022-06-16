@@ -7,7 +7,6 @@ router.use((req, res, next) => {
   next();
 });
 
-
 router.post('/createNewUser',(req,res)=>{
   let result;
   req.on('data',async (chunk)=>{

@@ -16,34 +16,55 @@ let AlertsBox = styled.div`
 
 `;
 
-let Message = styled.h2`
-    line-height:150px;
+let Message = styled.h4`
+    line-height:30px;
+    background:lightcoral;
 `;
 
 export default function(props){
-    let [messages,setMessages] = React.useState([]);
     let currentTime = Date.now();
-    // if(messages.indexOf())
-    // setMessages([...messages,{text:props.msg,timeExpire:currentTime + 5000}]);
-    // props.delete();
+    let TickMS = 500;
 
-    React.useEffect(()=>{
-        if(messages.length == 0){
-            console.log('no one alerts');
+    let Tick = setTimeout(() => {
+        // checkAlerts();
+    }, TickMS);
+
+    function checkAlerts(){
+        // console.log('Verifying');
+        currentTime = Date.now();
+
+        if(props.messages.length == 0){
+            // console.log('no one alerts');
+            clearTimeout(Tick);
             return 0;
-        }
 
-        if(messages[0].timeExpire <= currentTime){
-            messages.shift();
-            setMessages([...messages]);
+        }else if(props.messages[0].timeExpire <= currentTime){
+            props.messages.shift();
+            props.setMessages([...props.messages]);
+        }else{
+            setTimeout(()=>{
+                checkAlerts();
+            },TickMS)
         }
-
-    })
+    }
+    
+    function DeleteClickedMessage(event){
+        let elementToDelete = event.target;
+        let childrenOfThisParent = event.target.parentNode.children;
+        let newMessages = [];
+        for(let i =0; i < childrenOfThisParent.length;i++){
+            if(childrenOfThisParent[i] != elementToDelete){
+                newMessages.push(props.messages[i]);
+            }
+        }
+        props.setMessages(newMessages);
+        // console.log(event);
+    }
     return <>
         <WrapAlertBox>
             <AlertsBox>
-                {messages.map((el,i)=>{
-                    return <Message key={`mesId${currentTime}`}>msg::{el.text} <br /> will deleted::{el.timeExpire}</Message>
+                {props.messages.map((el,i)=>{
+                    return <Message key={ i + el.text } onClick={(e)=>{DeleteClickedMessage(e)}} >msg::{ el.text } <br /> will deleted::{ el.timeExpire } <br /> NUMER OF MESSAGE:{i}</Message>
                 })}                
             </AlertsBox>
         </WrapAlertBox>

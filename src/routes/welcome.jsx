@@ -1,10 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+
 import Send from '../scripts/loginSender.js';
+import InputsValues from '../scripts/getValuesFormInputs.js';
 
 
 import InputForm from '../components/form/input.jsx';
-import Alert from '../components/alerts/error.jsx';
+import Alerts from '../components/alerts/error.jsx';
 
 
 let WrapContent = styled.div`
@@ -51,62 +53,68 @@ let SendButton = styled.input`
 
 `;
 
-let ShowPasswordParagraph = styled.p`
-  text-align:center;
-  padding:1rem;
-  display:block;
-  border:1px solid #000;
-  transition:transform 0.15s;
-  &:hover{
-    cursor:pointer
-  }
-  &:active{
-    transform:translateY(10px);
-  }
-`;
+// let ShowPasswordParagraph = styled.p`
+//   text-align:center;
+//   padding:1rem;
+//   display:block;
+//   border:1px solid #000;
+//   transition:transform 0.15s;
+//   &:hover{
+//     cursor:pointer
+//   }
+//   &:active{
+//     transform:translateY(10px);
+//   }
+// `;
 
 
 export default function Welcome() {
-  // let [answer,setAnswer] = React.useState(false);
-  let [msgAlert,setmsgAlert] = React.useState('');
 
-  // if(answer === true){
-  //   window.location.replace('/chat');
-  // }
+  
+  let [messages,setMessages] = React.useState([]);
+  let orderStack = [];
+
 
   function HandleSubmit(e){
     e.preventDefault();
+
     let formDatas = e.target.attributes;
     let url = formDatas.action.value;
     let method = formDatas.method.value;
-    console.log(e);
 
-    let formChildren = e.target.children;
-    let values = {};
+    // console.log(e);
 
-    for(let i = 0; i < formChildren.length ; i++){
+   
+    let values = InputsValues(e);
 
-      let currentElem = formChildren[i];
+    
+    orderStack.push(addToStack(method,values));
+    orderStack.shift()();
+    // console.log(values);
 
-      if(isInput(currentElem) && i != formChildren.length -1){
-        values[currentElem.id] = currentElem.value;
-      }
+    // Send(method, url,values,()=>{
+    //   console.log('SWEET WORK');
+    // });
 
-    }
-    console.log(values);
-    Send(method, url,values,()=>{
-      console.log('SWEET WORK');
-    });
-
-    Send(method, "/api/createNewUser",values,(xhr)=>{
-      console.log('SWEET WORK 22');
-      console.log(xhr.status);
-      setmsgAlert(xhr.responseStatus)
-    });
+    
   }
 
-  function isInput(element){
-    return element.tagName === 'INPUT' ? true : false; 
+  function addToStack(method,values){
+    return ()=>{
+      Send(method, "/api/createNewUser",values,(xhr)=>{
+        console.warn('SWEET WORK 22',messages.length);
+        let parsedResponse = JSON.parse(xhr.responseText);
+        // console.log(parsedResponse);
+        addErrorToStack(parsedResponse.value.why.why);  
+      });
+    }
+  }
+  
+
+  function addErrorToStack(msg){
+    let currentTime = Date.now();
+    let timeExpires = 10000;
+    setMessages([...messages,{text:msg,timeExpire:currentTime + timeExpires}]);
   }
 
 
@@ -122,7 +130,7 @@ export default function Welcome() {
               <SendButton type="submit" value='Send' />
           </form>
         </div>
-        <Alert msg={msgAlert || "empty" }/>
+        <Alerts messages={messages} setMessages={setMessages}/>      
       </WrapContent>      
     </>
   }
