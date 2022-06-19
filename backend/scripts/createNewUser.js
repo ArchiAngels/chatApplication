@@ -17,12 +17,12 @@ module.exports = function(datauser){
     }).then(
         function(value){
             console.log(value);
-            return {isOk:true,body:value};
+            return {isOK:true,...value};
         },
         function(error){
             let msg = `Rejected by ${error.why}`;
             console.log(msg);
-            return {isOk:false,why:error};
+            return {isOK:false,...error};
         }
     )
 }

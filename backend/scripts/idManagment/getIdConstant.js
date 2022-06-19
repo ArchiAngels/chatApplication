@@ -2,7 +2,10 @@ module.exports = function(){
     return new Promise(function(resolve,reject){
         const { MongoClient } = require("mongodb");
         let timeOver = setTimeout(()=>{
-            reject('Time out 5.0s create user')
+            let messageToClient = `Server timeOUT Error`;
+            let errDetails = 'Time out 5.0s create user';
+            reject({canSend:messageToClient,detailsError:errDetails});
+            
         },5000);
 
         const uri = process.env.MongoDb_URL;
@@ -18,20 +21,32 @@ module.exports = function(){
 
                 const query = {TYPE:"CONSTANT"};
 
-                await users.findOne(query,(err,res)=>{
+                let fiftyFifty = Math.random() > 0.5;
 
-                    clearTimeout(timeOver);
+                if(fiftyFifty){
+                    reject({canSend:"New server error"});
+                }else{
+                    await users.findOne(query,async function(err,res){
 
-                    if(err) {
-                       return reject(`${err.message} -- findOne errCallback\n and result : ${res}`);
-                    } 
-
-                    resolve(res);
-
-                });
+                        await client.close();
+    
+                        clearTimeout(timeOver);
+    
+                        if(err) {
+                            let messageToClient = `Server Database Error`;
+                            
+                            return reject({canSend:messageToClient,detailsError:err.message});
+                        } 
+    
+                        resolve(res);
+    
+                    });
+                }
+                
+                    // resolve(res);
             } finally {
                 // Ensures that the client will close when you finish/error
-                await client.close();
+                
             }
         }
         return run().catch(console.dir);
@@ -40,7 +55,8 @@ module.exports = function(){
             return {isOK:true,body:value};
         },
         function(error){
-            return {isOK:false,why:error};
+            // console.log(error.detailsError);
+            return {isOK:false,why:error.canSend};
         }
     )
 }

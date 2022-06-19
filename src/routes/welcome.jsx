@@ -6,7 +6,7 @@ import InputsValues from '../scripts/getValuesFormInputs.js';
 
 
 import InputForm from '../components/form/input.jsx';
-import Alerts from '../components/alerts/error.jsx';
+import AlertsContainer from '../components/alerts/alertsContainer.jsx';
 
 
 let WrapContent = styled.div`
@@ -62,22 +62,10 @@ let SendButton = styled.input`
 
 `;
 
-// let ShowPasswordParagraph = styled.p`
-//   text-align:center;
-//   padding:1rem;
-//   display:block;
-//   border:1px solid #000;
-//   transition:transform 0.15s;
-//   &:hover{
-//     cursor:pointer
-//   }
-//   &:active{
-//     transform:translateY(10px);
-//   }
-// `;
-
 
 export default function Welcome() {
+
+  // console.log("RENDER WELCOME");
 
   
   let [messages,setMessages] = React.useState([]);
@@ -90,19 +78,10 @@ export default function Welcome() {
     let formDatas = e.target.attributes;
     let url = formDatas.action.value;
     let method = formDatas.method.value;
-
-    // console.log(e);
-
    
     let values = InputsValues(e);
-
     
     addToStack(method,values);
-    // console.log(values);
-
-    // Send(method, url,values,()=>{
-    //   console.log('SWEET WORK');
-    // });
 
     
   }
@@ -112,19 +91,24 @@ export default function Welcome() {
 
     Send(method, "/api/createNewUser",values,(xhr)=>{
 
-      // console.warn('SWEET WORK 22',messages.length);
-
       let parsedResponse = JSON.parse(xhr.responseText);
-      console.log(parsedResponse);
+      console.log('parsedResponse',parsedResponse);
 
-      let condition = Math.random() > 0.5? true: false;
-      // console.log('condition',condition)
+      // let condition = Math.random() > 0.5? true: false;
 
-      addErrorToStack(parsedResponse.value.why.why,condition);
+      let condition = parsedResponse.value.isOK;
+      let value,reason,result;
 
-      setTimeout(()=>{
-        setLoading(false);
-      },1000);
+      if(condition){
+        value = `id: ${parsedResponse.value.body.idUser} \n TYPE: ${parsedResponse.value.body.TYPE}`;
+      }else{
+        reason = parsedResponse.value.why;
+      }
+
+      result = condition ? value : reason;
+
+      setLoading(false);
+      addErrorToStack(result,condition);
     });
 
     
@@ -151,7 +135,7 @@ export default function Welcome() {
               <SendButton type="submit" value='Send' disabled={isLoading}/>
           </form>
         </div>
-        <Alerts messages={messages} setMessages={setMessages}/>      
+        <AlertsContainer messages={messages} setMessages={setMessages}/>      
       </WrapContent>      
     </>
   }
