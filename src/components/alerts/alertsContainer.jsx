@@ -24,10 +24,20 @@ export default function AlertsContainer(props){
         props.messages.splice(index,1);
         props.setMessages([...props.messages]);
     }
+    function giveMoreTimeBecauseFocused(index,newTime){
+        props.messages[index].timeExpire = newTime;
+        props.setMessages([...props.messages]);
+    }
     return <>
         <WrapAlertBox>
             {props.messages.map((el,i)=>{
-                return <AlertMessage el={el} index={i} key ={`${currentTime + i}`} delete = {deleteMessage}/>
+                return <AlertMessage 
+                            el={el} 
+                            index={i}
+                            key ={`${currentTime + i}`} 
+                            delete = {deleteMessage} 
+                            addTime = {giveMoreTimeBecauseFocused}
+                        />
             })}   
             
         </WrapAlertBox>

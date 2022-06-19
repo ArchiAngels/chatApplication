@@ -10,6 +10,7 @@ let Message = styled.h4`
 let AlertsBox = styled.div`
 
     // margin-bottom:50px;
+    border:1px solid #000;
     padding:1rem;
 `;
 
@@ -17,32 +18,62 @@ let colorSucces = 'lightgreen';
 let colorError = 'lightcoral';
 
 export default function AlertMessage(props){
-    let [isDeleted,setDelete] = React.useState(false);
-    let {text,isOK,timeExpire} = props.el; 
-    let [time,setTime] = React.useState(timeExpire - Date.now());
+    let {text,isOK,timeExpire} = props.el;
+
     let i = props.index;
 
-    if(isDeleted){
-        setTimeout(()=>{
-            props.delete(i);
-        },10)
+    let now = Date.now();
+
+    // console.log(text,isOK,timeExpire,timeExpire - now);
+
+    let [timeFocused,setTimeFocused] = React.useState(0);
+    let [isDeleted,setDelete] = React.useState(false);    
+    let [time,setTime] = React.useState(timeExpire);
+    let [step,setStep] = React.useState(10);
+    
+    
+
+    if(isDeleted || timeExpire <= now) {
+        return <></>
     }
+
     setTimeout(()=>{
-        if(time <= 0){
+    
+        if(time <= now){
             setDelete(true);
-        }else{
-            setTime(time-10);
         }
-    },10);
+        else{
+            setTime(time-step);
+        }
+        
+    },step);
+    
+
 
 
 
     return <>
-        <AlertsBox>
+        <AlertsBox
+        
+            onClick={()=>{setDelete(true)}}
+
+            onMouseEnter = {()=>{
+                setTimeFocused(Date.now());
+                setStep(0);
+            }}
+
+            onMouseLeave = {()=>{
+                let finishFocused = Date.now();
+                let newTime = finishFocused - timeFocused + time;
+                props.addTime(i,newTime);
+                setStep(10);
+            }}
+        >
             <Message 
-                onClick={()=>{setDelete(true)}}
                 style={{background: isOK ? colorSucces : colorError}}>
-                    msg::{ text } <br /> will deleted::{ time } <br /> NUMER OF MESSAGE:{i}
+                    msg :: { text } <br /> 
+                    ms :: { time - now } <br /> 
+                    NUMER OF MESSAGE :: {i}
             </Message>                             
         </AlertsBox>
     </>

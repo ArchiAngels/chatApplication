@@ -117,9 +117,8 @@ export default function Welcome() {
   
 
   function addErrorToStack(msg,isOK){
-    let currentTime = Date.now();
-    let timeExpires = 5000;
-    setMessages([...messages,{text:msg,timeExpire:currentTime + timeExpires,isOK:isOK}]);
+    let timeExpires = 5000 + Date.now();
+    setMessages([...messages,{text:msg,timeExpire:timeExpires,isOK:isOK}]);
   }
 
 
