@@ -94,15 +94,15 @@ export default function Welcome() {
       let parsedResponse = JSON.parse(xhr.responseText);
       console.log('parsedResponse',parsedResponse);
 
-      // let condition = Math.random() > 0.5? true: false;
+      let condition = Math.random() > 0.5? true: false;
 
-      let condition = parsedResponse.value.isOK;
+      // let condition = parsedResponse.value.isOK;
       let value,reason,result;
 
       if(condition){
         value = `id: ${parsedResponse.value.body.idUser} \n TYPE: ${parsedResponse.value.body.TYPE}`;
       }else{
-        reason = parsedResponse.value.why;
+        reason = parsedResponse.value.why || 'Not expected error';
       }
 
       result = condition ? value : reason;
@@ -118,7 +118,7 @@ export default function Welcome() {
 
   function addErrorToStack(msg,isOK){
     let timeExpires = 5000 + Date.now();
-    setMessages([...messages,{text:msg,timeExpire:timeExpires,isOK:isOK}]);
+    setMessages([...messages,{text:msg,timeExpire:timeExpires}]);
   }
 
 

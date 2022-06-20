@@ -20,28 +20,21 @@ module.exports = function(){
                 const users = database.collection('users');           
 
                 const query = {TYPE:"CONSTANT"};
+                await users.findOne(query,async function(err,res){
 
-                let fiftyFifty = Math.random() > 0.5;
+                    await client.close();
 
-                if(fiftyFifty){
-                    reject({canSend:"New server error"});
-                }else{
-                    await users.findOne(query,async function(err,res){
+                    clearTimeout(timeOver);
 
-                        await client.close();
-    
-                        clearTimeout(timeOver);
-    
-                        if(err) {
-                            let messageToClient = `Server Database Error`;
-                            
-                            return reject({canSend:messageToClient,detailsError:err.message});
-                        } 
-    
-                        resolve(res);
-    
-                    });
-                }
+                    if(err) {
+                        let messageToClient = `Server Database Error`;
+                        
+                        return reject({canSend:messageToClient,detailsError:err.message});
+                    } 
+
+                    resolve(res);
+
+                });
                 
                     // resolve(res);
             } finally {

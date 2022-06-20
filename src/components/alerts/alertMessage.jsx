@@ -16,37 +16,63 @@ let AlertsBox = styled.div`
 
 let colorSucces = 'lightgreen';
 let colorError = 'lightcoral';
+let colorNeutral = 'gold';
 
 export default function AlertMessage(props){
-    let {text,isOK,timeExpire} = props.el;
 
+    // console.log(`DRAW MESSAGE with props::`);
+    // console.log(props.el);
+    
+    let {text,isOK,timeExpire,ID,isDeleted} = props.el;
     let i = props.index;
+
+
+    let ifSomeVaraiblesIsNotWrited = isOK === undefined  || ID === undefined || isDeleted === undefined;
+    if(ifSomeVaraiblesIsNotWrited){
+        return props.tryUpdateIfNoStaticVariables(i,{
+            isOK:isOK,
+            ID:ID,
+            isDeleted:isDeleted,
+        })
+    }
+
+    
 
     let now = Date.now();
 
     // console.log(text,isOK,timeExpire,timeExpire - now);
 
     let [timeFocused,setTimeFocused] = React.useState(0);
-    let [isDeleted,setDelete] = React.useState(false);    
+    let [isDeletedState,setDeleteState] = React.useState(false);    
     let [time,setTime] = React.useState(timeExpire);
     let [step,setStep] = React.useState(10);
-    
-    
 
-    if(isDeleted || timeExpire <= now) {
-        return <></>
+
+    if(isDeletedState || timeExpire <= now) {
+        return props.tryHide(ID);
     }
 
     setTimeout(()=>{
     
         if(time <= now){
-            setDelete(true);
+            setDeleteState(true);
         }
         else{
             setTime(time-step);
         }
         
     },step);
+
+    let colorCondition;
+
+    if(isOK === undefined){
+        colorCondition = colorNeutral;
+    }else if(isOK !== 'neutral'){
+        colorCondition = isOK ? colorSucces : colorError;
+    }else{
+        colorCondition = colorNeutral;
+    }
+
     
 
 
@@ -55,25 +81,29 @@ export default function AlertMessage(props){
     return <>
         <AlertsBox
         
-            onClick={()=>{setDelete(true)}}
+            onClick={()=>{setDeleteState(true)}}
 
             onMouseEnter = {()=>{
-                setTimeFocused(Date.now());
+                // setTimeFocused(Date.now());
+                // let newTime = time + 30;
+                // props.addTime(ID,newTime);
+                props.trySetPause(ID,true);
                 setStep(0);
             }}
 
             onMouseLeave = {()=>{
-                let finishFocused = Date.now();
-                let newTime = finishFocused - timeFocused + time;
-                props.addTime(i,newTime);
+                // let finishFocused = Date.now();
+                // let newTime = finishFocused - timeFocused + time + 500;
+                // props.addTime(ID,newTime);
+                props.trySetPause(ID,false);
                 setStep(10);
             }}
         >
             <Message 
-                style={{background: isOK ? colorSucces : colorError}}>
+                style={{background: colorCondition}}>
                     msg :: { text } <br /> 
-                    ms :: { time - now } <br /> 
-                    NUMER OF MESSAGE :: {i}
+                    ms :: { time - now } <br />
+                    id of message :: {ID} 
             </Message>                             
         </AlertsBox>
     </>
