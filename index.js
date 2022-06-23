@@ -1,4 +1,5 @@
 require('dotenv').config();
+require("core-js");
 const PATH = require('path');
 const api = require('./backend/api/apiUser.js');
 

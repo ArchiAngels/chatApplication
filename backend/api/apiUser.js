@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const createNewUser = require('../scripts/createNewUser.js');
+const createNewUser = require('../scripts/userManagment/createNewUser.js');
 
 router.use((req, res, next) => {
   console.log('Time: ', Date.now());

@@ -24,30 +24,48 @@ export default function AlertsContainer(props){
 
     function AddStaticVariablesIfNotExisted(index){
 
+        console.log('need Add Static variables',index,props.messages[index]);
+
         setTimeout(()=>{
             let passedVariables = {...arguments[0]};
-            let UpdateExistedMessage = props.messages.splice(index,1)[0];
-            console.log(UpdateExistedMessage);
+            let UpdateExistedMessage;
+            let id;
 
-            
+            if(props.messages.length < 2){
 
-            let id = props.messages.length === 0 ? 0 : props.messages[props.messages.length - 1].ID + 1;
+                UpdateExistedMessage = props.messages.splice(index,1)[0];
+                id = 0;
+
+            }else{
+                let NoDeletedMessages = props.messages.filter(element => !element.isDeleted);
+                console.log(nonDeletedMessages,props.messages,index);
+
+                UpdateExistedMessage = NoDeletedMessages.splice(index,1)[0];
+
+                props.messages.pop();
+
+                id = props.messages[props.messages.length - 1].ID + 1;
+            }
             
             
             let idMessage = passedVariables.ID || id;
-
-            console.log(passedVariables.ID,id)
             let statusCodeMessage = passedVariables.isOK || 'neutral';
-            let statusDeleteMessage = false;
     
     
             UpdateExistedMessage = {...UpdateExistedMessage,
                 isOK : statusCodeMessage,
-                isDeleted : statusDeleteMessage,
-                ID : idMessage
+                isDeleted : false,
+                ID : idMessage,
+                tickUpdateMessage:10,
+                isPaused: {
+                    condtition: false
+                }
             };
+            console.log(UpdateExistedMessage);
             props.setMessages([...props.messages,UpdateExistedMessage]);
+            
         },1)
+        console.log(props.messages);
         // isOK:isOK,isDeleted:false,ID:newId
     }
 
@@ -64,7 +82,7 @@ export default function AlertsContainer(props){
     }
     function giveMoreTimeBecauseFocused(id,newTime){
         // setTimeout(()=>{
-            props.messages[id].timeExpire = newTime;
+            props.messages[id].timeExpire += newTime;
             props.messages[id].isDeleted = false;
             props.setMessages([...props.messages]);
         // },1)
@@ -78,13 +96,17 @@ export default function AlertsContainer(props){
         },1)
     }
 
-    function setPauseTimeout(id,bool){
+    function setPauseTimeout(id,bool,tick){
+
+        console.log(id,props.messages[id],'TRY SET PAUSE',bool);
+        // debugger
 
         
         let alreadyOnPause = props.messages[id].isPaused.condtition;
+        props.messages[id].tickUpdateMessage = tick;
 
         if(alreadyOnPause){
-
+            console.log("on pause");
         }else{
             props.messages[id].isPaused = {
                 condtition: false,
@@ -96,9 +118,16 @@ export default function AlertsContainer(props){
 
         if(bool && !alreadyOnPause){
             props.messages[id].isPaused.startPauseTime = Date.now();
+            props.messages[id].isPaused.condtition = true;       
             props.setMessages([...props.messages]);
-        }else{
+        }else if(!bool && alreadyOnPause){
+            console.log("else if");
+
+            props.messages[id].isPaused.condtition = false;
             props.messages[id].isPaused.difference = Date.now() - props.messages[id].isPaused.startPauseTime;
+
+            console.log(props.messages[id].isPaused,props.messages[id].isPaused.difference);
+
             giveMoreTimeBecauseFocused(id,props.messages[id].isPaused.difference);
         }
 

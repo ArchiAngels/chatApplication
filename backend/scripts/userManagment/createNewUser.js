@@ -1,6 +1,6 @@
 module.exports = function(datauser){
-    const getId = require('./idManagment/getIdConstant.js');
-    const setId = require('./idManagment/updateIdConstant.js');
+    const getId = require('../idManagment/getIdConstant.js');
+    const setId = require('../idManagment/updateIdConstant.js');
     let msg = `Passed data in CreatenewUser :: ${datauser}`;
     console.log(msg);
     return new Promise(async function(resolve,reject){
