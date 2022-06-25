@@ -3,24 +3,29 @@ require("core-js");
 const PATH = require('path');
 const api = require('./backend/api/apiUser.js');
 
-const server = require('express');
-const app = server();
-const port = process.env.PORT || 3030;
+const test = require('./backend/scripts/mongodb/allMongoControllers.js');
 
-app.listen(port,()=>{
-    console.log(`\n\n\n\nServer start localhost:${port}`);
-});
+let a = test.createNewCollection('newLine');
+console.log(`a:::`,a);
 
-app.use(server.static(PATH.join(__dirname,'/client')))
+// const server = require('express');
+// const app = server();
+// const port = process.env.PORT || 3030;
 
-app.use('/api',api);
+// app.listen(port,()=>{
+//     console.log(`\n\n\n\nServer start localhost:${port}`);
+// });
 
-app.get('*',(req,res)=>{
-    let url = req.url;
-    if(url === '/'){
-        return res.redirect('/firstContact');
-    }
+// app.use(server.static(PATH.join(__dirname,'/client')))
 
-    let html = PATH.join(__dirname,'index.html');
-    return res.sendFile(html);
-})
+// app.use('/api',api);
+
+// app.get('*',(req,res)=>{
+//     let url = req.url;
+//     if(url === '/'){
+//         return res.redirect('/firstContact');
+//     }
+
+//     let html = PATH.join(__dirname,'index.html');
+//     return res.sendFile(html);
+// })

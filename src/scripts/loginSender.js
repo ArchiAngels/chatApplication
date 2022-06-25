@@ -31,11 +31,12 @@ export default function(method,url,value,callback){
         }
   }).then(
     function(value){
-      console.log('good values come');
+      // console.log('good values come');
       callback(value);
     },
     function(error){
-      console.log('bad values dont come',error);
+      // console.log('bad values dont come',error);
+      callback(error);
     }
   )
     

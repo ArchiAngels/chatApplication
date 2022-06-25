@@ -24,10 +24,12 @@ export default function AlertsContainer(props){
 
     function AddStaticVariablesIfNotExisted(index){
 
-        console.log('need Add Static variables',index,props.messages[index]);
+        
+
+        // console.log('need Add Static variables',index,props.messages[index]);
 
         setTimeout(()=>{
-            let passedVariables = {...arguments[0]};
+            let passedVariables = {...arguments[1]};
             let UpdateExistedMessage;
             let id;
 
@@ -38,7 +40,7 @@ export default function AlertsContainer(props){
 
             }else{
                 let NoDeletedMessages = props.messages.filter(element => !element.isDeleted);
-                console.log(nonDeletedMessages,props.messages,index);
+                // console.log(nonDeletedMessages,props.messages,index);
 
                 UpdateExistedMessage = NoDeletedMessages.splice(index,1)[0];
 
@@ -49,7 +51,7 @@ export default function AlertsContainer(props){
             
             
             let idMessage = passedVariables.ID || id;
-            let statusCodeMessage = passedVariables.isOK || 'neutral';
+            let statusCodeMessage = passedVariables.isOK ?? 'neutral';
     
     
             UpdateExistedMessage = {...UpdateExistedMessage,
@@ -61,11 +63,11 @@ export default function AlertsContainer(props){
                     condtition: false
                 }
             };
-            console.log(UpdateExistedMessage);
+            // console.log(UpdateExistedMessage);
             props.setMessages([...props.messages,UpdateExistedMessage]);
             
         },1)
-        console.log(props.messages);
+        // console.log(props.messages);
         // isOK:isOK,isDeleted:false,ID:newId
     }
 
@@ -97,16 +99,12 @@ export default function AlertsContainer(props){
     }
 
     function setPauseTimeout(id,bool,tick){
-
-        console.log(id,props.messages[id],'TRY SET PAUSE',bool);
-        // debugger
-
         
         let alreadyOnPause = props.messages[id].isPaused.condtition;
         props.messages[id].tickUpdateMessage = tick;
 
         if(alreadyOnPause){
-            console.log("on pause");
+            // console.log("on pause");
         }else{
             props.messages[id].isPaused = {
                 condtition: false,
@@ -121,12 +119,12 @@ export default function AlertsContainer(props){
             props.messages[id].isPaused.condtition = true;       
             props.setMessages([...props.messages]);
         }else if(!bool && alreadyOnPause){
-            console.log("else if");
+            // console.log("else if");
 
             props.messages[id].isPaused.condtition = false;
             props.messages[id].isPaused.difference = Date.now() - props.messages[id].isPaused.startPauseTime;
 
-            console.log(props.messages[id].isPaused,props.messages[id].isPaused.difference);
+            // console.log(props.messages[id].isPaused,props.messages[id].isPaused.difference);
 
             giveMoreTimeBecauseFocused(id,props.messages[id].isPaused.difference);
         }

@@ -35,7 +35,7 @@ let SendButton = styled.input`
 `;
 
 let urlLogin = "/api/loginUser";
-let urlRegister = "/api/loginUser";
+let urlRegister = "/api/createNewUser";
 
 
 export default function Form(props){
@@ -54,20 +54,21 @@ export default function Form(props){
        
         let values = InputsValues(e);
         
-        addToStack(method,values);
+        addToStack(method,url,values);
     
         
     }
     
-    async function addToStack(method,values){
+    async function addToStack(method,url,values){
         setLoading(true);
     
-        let request = await Send(method, "/api/createNewUser",values,(xhr)=>{
+        await Send(method, url,values,(xhr)=>{
     
           let parsedResponse = JSON.parse(xhr.responseText);
-          console.log('parsedResponse',parsedResponse);
-    
           let condition = Math.random() > 0.5? true: false;
+          console.log('parsedResponse',parsedResponse,condition);
+    
+          
     
           // let condition = parsedResponse.value.isOK;
           let value,reason,result;

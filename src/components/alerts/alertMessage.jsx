@@ -31,7 +31,7 @@ export default function AlertMessage(props){
 
     let ifSomeVaraiblesIsNotWrited = isOK === undefined  || ID === undefined || isDeleted === undefined;
     if(ifSomeVaraiblesIsNotWrited){
-        console.log(`isOK::${isOK}\n ID::${ID}n isDeleted::${isDeleted}`);
+        // console.log(`isOK::${isOK}\n ID::${ID}n isDeleted::${isDeleted}`);
         return props.tryUpdateIfNoStaticVariables(i,{
             isOK:isOK,
             ID:ID,
@@ -48,8 +48,6 @@ export default function AlertMessage(props){
     // let [timeFocused,setTimeFocused] = React.useState(0);
     let [isDeletedState,setDeleteState] = React.useState(false);    
     let [time,setTime] = React.useState(timeExpire);
-
-    console.log('current Step::',tickUpdateMessage);
 
 
     if(isDeletedState || timeExpire <= now) {
@@ -69,9 +67,7 @@ export default function AlertMessage(props){
 
     let colorCondition;
 
-    if(isOK === undefined){
-        colorCondition = colorNeutral;
-    }else if(isOK !== 'neutral'){
+    if(isOK !== 'neutral'){
         colorCondition = isOK ? colorSucces : colorError;
     }else{
         colorCondition = colorNeutral;

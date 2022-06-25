@@ -42,7 +42,7 @@ export default function Welcome() {
 
   function addNewMessage(msg,isOK){
     let timeExpires = 5000 + Date.now();
-    setMessages([...messages,{text:msg,timeExpire:timeExpires}]);
+    setMessages([...messages,{text:msg,timeExpire:timeExpires,isOK:isOK}]);
   }
 
 
