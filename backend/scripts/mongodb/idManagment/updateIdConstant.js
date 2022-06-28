@@ -1,51 +1,38 @@
-module.exports = function(newId){
-    return new Promise(function(resolve,reject){
-        const { MongoClient } = require("mongodb");
+const mainMongoodb = require('../mainMongoodb.js');
 
-        let timeOver = setTimeout(()=>{
-            reject('Time out 5.0s create user')
-        },5000);
+module.exports = async function(newId){
 
-        const uri = process.env.MongoDb_URL;
+    console.log('updateIdConstant:::start creating')    
 
-        const client = new MongoClient(uri);
+    function passFunction(client,database,resolve,reject,stopTimeOut){
 
-        async function run() {
-            try {
-                await client.connect();
+        return new Promise(async function(myresolve,myreject){
 
-                const database = client.db('Chat');
-                const users = database.collection('users');           
 
-                const filter = {TYPE:"CONSTANT"};
+            const users = database.collection('users');           
 
-                const updateDoc = {
+            const filter = {TYPE:"CONSTANT"};
 
-                    $set: {
+            const updateDoc = {
 
-                        idUser: newId
+                $set: {
 
-                    },
+                    idUser: newId
 
-                };
+                },
 
-                await users.updateOne(filter, updateDoc,(err,res)=>{
-                    if(err) return reject(err.message)
-                    clearTimeout(timeOver);
-                    resolve(res);
-                });
-            } finally {
-                // Ensures that the client will close when you finish/error
-                await client.close();
-            }
-        }
-        return run().catch(console.dir);
-    }).then(
-        function(value){
-            return {isOK:true,body:value};
-        },
-        function(error){
-            return {isOK:false,why:error};
-        }
-    )
+            };
+
+            await users.updateOne(filter, updateDoc,(err,res)=>{
+                stopTimeOut("updateIdConstant");
+
+                if(err) return reject(err.message)
+                resolve(res);
+            });
+
+        });
+    }
+    let result =  await mainMongoodb(passFunction);
+    return result;
+
 }
