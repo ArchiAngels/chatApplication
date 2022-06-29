@@ -7,6 +7,9 @@ router.use((req, res, next) => {
   next();
 });
 
+const TimeExpiresCookies = ()=>{
+  return new Date(Date.now() + 10000);
+}
 router.post('/createNewUser',(req,res)=>{
   req.on('data',async (chunk)=>{
     chunk = chunk+'';
@@ -16,7 +19,11 @@ router.post('/createNewUser',(req,res)=>{
       // create new user
       let new_user = await MongoChanger.createNewUser(chunk.nickname,chunk.password);
       if(new_user.isOK){
-        res.json({isOK:true,value:{body:{msg:"Succesfully created"}}});
+        res
+          .status(200)
+          .cookie('logged','true',{expires: TimeExpiresCookies()})
+          .cookie('nickname',chunk.nickname,{expires: TimeExpiresCookies()})
+          .json({isOK:true,value:{body:{msg:"Succesfully created"}}})
       }else{
         res.json({isOK:false,value:new_user});
       }
@@ -41,7 +48,13 @@ router.post('/loginUser',(req,res)=>{
     }else{
       let isPass = await MongoChanger.isPasswordAndLoginMatch(result.why.user,chunk.nickname,chunk.password);
       if(isPass.isOK){
-        res.json({isOK:true,value:{body:isPass}});
+
+        res
+          .status(200)
+          .cookie('logged','true',{expires: TimeExpiresCookies()})
+          .cookie('nickname',chunk.nickname,{expires: TimeExpiresCookies()})
+          .json({isOK:true,value:{body:isPass}});
+
       }else{
         res.json({isOK:false,value:{why:isPass}});
       }

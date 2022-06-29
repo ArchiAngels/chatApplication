@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 import Form from "../components/form/form.jsx";
+import Auth from "./auth.jsx";
 
 import AlertsContainer from '../components/alerts/alertsContainer.jsx';
+import checkUserHaveSomeCookies from '../scripts/checkUserHaveSomeCookies.js';
 
 
 let WrapContent = styled.div`
@@ -33,11 +35,7 @@ let WrapContent = styled.div`
 `;
 
 
-export default function Welcome() {
-
-  // console.log("RENDER WELCOME");
-
-  
+export default function Welcome() {  
   let [messages,setMessages] = React.useState([]);  
 
   function addNewMessage(msg,isOK){
@@ -45,9 +43,11 @@ export default function Welcome() {
     setMessages([...messages,{text:msg,timeExpire:timeExpires,isOK:isOK}]);
   }
 
-
-
-
+  if(checkUserHaveSomeCookies().isOK){
+    return <>
+      <Auth url='/yourProfile'></Auth>
+    </>
+  }
   
   return <>
     <WrapContent>
@@ -55,7 +55,7 @@ export default function Welcome() {
       <div className="formWrap">
           <Form addMessage = {addNewMessage}/>
       </div>
-      <AlertsContainer messages={messages} setMessages={setMessages}/>      
+      <AlertsContainer messages={messages} setMessages={setMessages} />      
     </WrapContent>      
   </>
   }

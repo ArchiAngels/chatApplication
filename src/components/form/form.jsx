@@ -72,15 +72,12 @@ export default function Form(props){
           if(xhr.isOK){
             // get answer from server
             parsedResponse = JSON.parse(xhr.value.responseText);
-            let bodyAnswer;
+            let bodyAnswer,v;
 
-            if(parsedResponse.isOK){
-              bodyAnswer = parsedResponse.value.body;
-              condition = true;
-            }else{
-              bodyAnswer = parsedResponse.value.why;
-              condition = false;
-            }
+            v = parsedResponse.value;
+
+            bodyAnswer = parsedResponse.isOK? v.body : v.why;
+            condition = parsedResponse.isOK;
             
             // console.log(parsedResponse)
             let msg = ``;
@@ -96,8 +93,7 @@ export default function Form(props){
           result = xhr.isOK ? value : reason;
 
           setLoading(false);
-          props.addMessage(result,condition);   
-          
+          props.addMessage(result,condition);          
     
         });
     
