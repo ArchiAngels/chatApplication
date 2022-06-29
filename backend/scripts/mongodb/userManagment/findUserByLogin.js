@@ -18,15 +18,14 @@ module.exports = async function(login){
                 stopTimeOut('findUser');
 
                 if(err) return reject(err);
-
-                console.log("findUSer::res",res);
+                
                 if(res === null){
                     console.log('no find any user with that login');
-                    return resolve({TYPE:'free to register',idUser:"free"});
+                    return resolve({TYPE:'free to register'});
 
                 }else{
                     console.log('find user with that login');
-                    return reject({why:'already register',idUser:"busy",value:res});
+                    return reject({why:'already register'});
                 }
 
                 

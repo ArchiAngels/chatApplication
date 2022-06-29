@@ -27,6 +27,7 @@ module.exports = async function(newId){
                 stopTimeOut("updateIdConstant");
 
                 if(err) return reject(err.message)
+                console.log(`new id:: ${res} === ${newId}`);
                 resolve(res);
             });
 

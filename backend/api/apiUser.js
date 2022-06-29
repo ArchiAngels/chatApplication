@@ -8,23 +8,40 @@ router.use((req, res, next) => {
 });
 
 router.post('/createNewUser',(req,res)=>{
-  let result;
   req.on('data',async (chunk)=>{
     chunk = chunk+'';
     chunk = JSON.parse(chunk);
     let result = await MongoChanger.findUserByLogin(chunk.nickname);
-    // result = await MongoChanger.createNewUser(chunk.nickname);
-    res.json({isOK:true,value:result});
+    if(result.isOK){
+      // create new user
+      let new_user = await MongoChanger.createNewUser(chunk.nickname,chunk.password);
+      if(new_user.isOK){
+        res.json({isOK:true,value:{body:{msg:"Succesfully created"}}});
+      }else{
+        res.json({isOK:false,value:new_user});
+      }
+    }else{
+      res.json({isOK:false,value:result});
+    }
+    
   })
   
 });
 
 
 router.post('/loginUser',(req,res)=>{
-  req.on('data',(chunk)=>{
-    console.log(chunk+'');
+  req.on('data',async (chunk)=>{
+    chunk = chunk+'';
+    chunk = JSON.parse(chunk);
+    let result = await MongoChanger.findUserByLogin(chunk.nickname);
+    if(result.isOK){
+      // no find iuser
+      res.json({isOK:false,value:{why:{messageAuthor:'no register account'}}});
+    }else{
+      res.json({isOK:true,value:{body:{messageAuthor:"LOGGED"}}});
+    }
   })
-  res.json({isOK:false,value:{body:{messageAuthor:"none inPROGRESS"}}});
+  // res.json({isOK:false,value:{why:{messageAuthor:"none inPROGRESS"}}});
 });
 
 module.exports = router;
