@@ -63,26 +63,29 @@ export default function Form(props){
         setLoading(true);
     
         await Send(method, url,values,(xhr)=>{
-    
-          let parsedResponse = JSON.parse(xhr.responseText);
-          let condition = Math.random() > 0.5? true: false;
-          console.log('parsedResponse',parsedResponse,condition);
-    
+
+
+          let value,reason,result,parsedResponse;
+
+          if(xhr.isOK){
+
+            parsedResponse = JSON.parse(xhr.value.responseText).value.body;
+            let msg = ``;
+            for(let item in parsedResponse){
+              msg += `${item} :: ${parsedResponse[item]} `;
+            }
+            value = msg;
+
+          }else{
+            reason = xhr.error || 'Unexpected error';
+          }
+
+          result = xhr.isOK ? value : reason;
+
+          setLoading(false);
+          props.addMessage(result,xhr.isOK);   
           
     
-          // let condition = parsedResponse.value.isOK;
-          let value,reason,result;
-    
-          if(condition){
-            value = `id: ${parsedResponse.value.body.idUser} \n TYPE: ${parsedResponse.value.body.TYPE}`;
-          }else{
-            reason = parsedResponse.value.why || 'Not expected error';
-          }
-    
-          result = condition ? value : reason;
-    
-          setLoading(false);
-          props.addMessage(result,condition);
         });
     
         
