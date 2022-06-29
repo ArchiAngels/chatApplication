@@ -6,5 +6,6 @@ module.exports = {
     getIdConstant: require('./idManagment/getIdConstant.js'),
     setIdConstant: require('./idManagment/updateIdConstant.js'),
     createNewUser : require('./userManagment/createNewUser.js'),
-    findUserByLogin : require('./userManagment/findUserByLogin.js')
+    findUserByLogin : require('./userManagment/findUserByLogin.js'),
+    isPasswordAndLoginMatch : require('./userManagment/VerifyLoginUser.js')
 }

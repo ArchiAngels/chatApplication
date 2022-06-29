@@ -1,6 +1,6 @@
 const mainMongoodb = require('../mainMongoodb.js');
 
-module.exports = async function(login){
+module.exports = async function(login,dataUserIsNeed = false){
 
     console.log('findUser:::start searching')    
 
@@ -18,14 +18,15 @@ module.exports = async function(login){
                 stopTimeOut('findUser');
 
                 if(err) return reject(err);
-                
+
                 if(res === null){
                     console.log('no find any user with that login');
                     return resolve({TYPE:'free to register'});
 
                 }else{
                     console.log('find user with that login');
-                    return reject({why:'already register'});
+                    let data = dataUserIsNeed? {user:res} : {};
+                    return reject({why:'already register',...data});
                 }
 
                 

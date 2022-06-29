@@ -11,7 +11,7 @@ router.post('/createNewUser',(req,res)=>{
   req.on('data',async (chunk)=>{
     chunk = chunk+'';
     chunk = JSON.parse(chunk);
-    let result = await MongoChanger.findUserByLogin(chunk.nickname);
+    let result = await MongoChanger.findUserByLogin(chunk.nickname,false);
     if(result.isOK){
       // create new user
       let new_user = await MongoChanger.createNewUser(chunk.nickname,chunk.password);
@@ -21,6 +21,7 @@ router.post('/createNewUser',(req,res)=>{
         res.json({isOK:false,value:new_user});
       }
     }else{
+      console.log(result);
       res.json({isOK:false,value:result});
     }
     
@@ -33,12 +34,18 @@ router.post('/loginUser',(req,res)=>{
   req.on('data',async (chunk)=>{
     chunk = chunk+'';
     chunk = JSON.parse(chunk);
-    let result = await MongoChanger.findUserByLogin(chunk.nickname);
+    let result = await MongoChanger.findUserByLogin(chunk.nickname,true);
     if(result.isOK){
       // no find iuser
       res.json({isOK:false,value:{why:{messageAuthor:'no register account'}}});
     }else{
-      res.json({isOK:true,value:{body:{messageAuthor:"LOGGED"}}});
+      let isPass = await MongoChanger.isPasswordAndLoginMatch(result.why.user,chunk.nickname,chunk.password);
+      if(isPass.isOK){
+        res.json({isOK:true,value:{body:isPass}});
+      }else{
+        res.json({isOK:false,value:{why:isPass}});
+      }
+      
     }
   })
   // res.json({isOK:false,value:{why:{messageAuthor:"none inPROGRESS"}}});
