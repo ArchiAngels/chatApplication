@@ -9,10 +9,24 @@ export default function Auth(props) {
 
   React.useEffect(()=>{
     setTimeout(()=>{
-      checkCookiesInterval(user,setUser,true);
-      if(user.isOK === false){
+      // console.log(user,'auth');
+      
+      if(user.isOK === true){
+        // console.log(user,'auth');
         setLoading(false);
+      }else{
+        let myOwnCookies = checkCookiesInterval(user,setUser,false,'auth');
+        console.log(myOwnCookies);
+        if(myOwnCookies.isOK){
+          // console.log('have cookies and change state');
+          setUser({...myOwnCookies.value})
+        }else{
+          setUser({...user});
+        }
+        
       }
+      
+      
     },1500)  
   })
 
@@ -22,7 +36,7 @@ export default function Auth(props) {
     </>
   }  
   return <>
-    {<Navigate to={props.url || `/404`} replace={true} />}    
+    {<Navigate to={'/yourProfile' || `/404`} replace={true} />}    
   </>
   }
   

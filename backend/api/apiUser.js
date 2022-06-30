@@ -7,8 +7,10 @@ router.use((req, res, next) => {
   next();
 });
 
+let timeInMs = 5000;
+
 const TimeExpiresCookies = ()=>{
-  return new Date(Date.now() + 10000);
+  return new Date(Date.now() + timeInMs);
 }
 router.post('/createNewUser',(req,res)=>{
   req.on('data',async (chunk)=>{
@@ -21,8 +23,9 @@ router.post('/createNewUser',(req,res)=>{
       if(new_user.isOK){
         res
           .status(200)
-          .cookie('logged','true',{expires: TimeExpiresCookies()})
-          .cookie('nickname',chunk.nickname,{expires: TimeExpiresCookies()})
+          .cookie('logged','true')
+          .cookie('nickname',chunk.nickname)
+          .cookie('timeCookies',timeInMs)
           .json({isOK:true,value:{body:{msg:"Succesfully created"}}})
       }else{
         res.json({isOK:false,value:new_user});
@@ -51,8 +54,9 @@ router.post('/loginUser',(req,res)=>{
 
         res
           .status(200)
-          .cookie('logged','true',{expires: TimeExpiresCookies()})
-          .cookie('nickname',chunk.nickname,{expires: TimeExpiresCookies()})
+          .cookie('logged','true')
+          .cookie('nickname',chunk.nickname)
+          .cookie('timeCookies',timeInMs)
           .json({isOK:true,value:{body:isPass}});
 
       }else{

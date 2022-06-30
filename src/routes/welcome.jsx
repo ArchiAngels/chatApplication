@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 import Form from "../components/form/form.jsx";
-import Auth from "./auth.jsx";
+import { Navigate } from "react-router-dom";
 
 import AlertsContainer from '../components/alerts/alertsContainer.jsx';
 import checkUserHaveSomeCookies from '../scripts/checkUserHaveSomeCookies.js';
+
 
 
 let WrapContent = styled.div`
@@ -35,7 +36,7 @@ let WrapContent = styled.div`
 `;
 
 
-export default function Welcome() {  
+export default function Welcome() {
   let [messages,setMessages] = React.useState([]);  
 
   function addNewMessage(msg,isOK){
@@ -45,7 +46,7 @@ export default function Welcome() {
 
   if(checkUserHaveSomeCookies().isOK){
     return <>
-      <Auth url='/yourProfile'></Auth>
+      <Navigate to='/auth' replace={true}/>
     </>
   }
   

@@ -1,31 +1,39 @@
 const checkUserHaveSomeCookies = require("./checkUserHaveSomeCookies.js");
 const  deleteAllCookies = require('./deleteAllCookies.js');
 
-module.exports = function CheckCookies(obj,setObj,auto = false){
+module.exports = function CheckCookies(obj,setObj,auto = false,whoPASSED = 'dont know who'){
+    
     let result = checkUserHaveSomeCookies();
-    console.log('Checking cookies');
+    console.log(`what actulaly passed:;`,obj,whoPASSED,auto,result);
+
+    function ChangeState(obj){
+        console.log(`change State `,obj,whoPASSED);
+        return {value:{...obj},isOK:result.isOK};
+    }
 
     if(obj.isOK === false){ 
         if(result.isOK === true){
-            setObj({...result})
+            return ChangeState({...result})
         }else{
-            setObj({redirect:true});
+            return ChangeState({redirect:true});
         }
 
     }else if(obj.isOK === true){
         
-        if(result.isOK === false){
+        if(parseInt(result.timeCookies) <= 0){
+            debugger
             deleteAllCookies();
-            obj = {...result,redirect:true};
             auto = false;
-            setObj(obj);
+            return ChangeState({redirect:true});
+        }else{
+            return ChangeState({...result});
         }
 
-        if(auto){
-            setTimeout(()=>{
-                CheckCookies(obj,setObj,auto)
-            },1000);
-        }
+        // if(auto){
+        //     setTimeout(()=>{
+        //         CheckCookies(obj,setObj,auto)
+        //     },1000);
+        // }
 
         
     }
