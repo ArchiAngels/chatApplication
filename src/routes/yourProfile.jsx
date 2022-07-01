@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 
 import deleteAllCookies from '../scripts/deleteAllCookies.js';
 import UpdateCookieTime from "../scripts/UpdateCookieTime.js";
-import checkCookiesInterval from '../scripts/checkCookiesInterval.js';
+import checkCookies from '../scripts/checkCookies.js';
 
 let Name = styled.h2`
     padding:10px;
@@ -16,39 +16,47 @@ let Name = styled.h2`
 
 export default function yourProfile(props){
 
-    // console.log('YourProfile')
-
     let [user,setUser] = React.useState({isOK:false});
-    let step = 1000;
+    let step = 15;
 
+    if(user.redirect){
+        return EXIT();
+    }
+    else{
+        let SavedCookies = checkCookies(user,'USER');
 
+        if(SavedCookies.isOK && !user.isOK){
 
-    if(user.redirect === true){
+            setUser({...SavedCookies.value});
+
+        }else if(SavedCookies.isOK && user.isOK){
+
+            user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
+
+            SavedCookies = checkCookies(user,'USER');
+
+            setTimeout(()=>{
+                setUser({...SavedCookies.value,timeCookies:user.timeCookies});
+            },step);
+
+        }else{
+            return EXIT();    
+        }
+    }
+    
+    function EXIT(){
         return <>
-            <Navigate to="/firstContact" replace={true}/>
+            <Navigate to='/firstContact' replace={true}/>
         </>
     }
-    // console.log(user.isOK,user,'USER');
-    React.useEffect(()=>{
-        setTimeout(()=>{
-    
-            // console.log(user.isOK,user,'USER');
-            let myOwnCookies = checkCookiesInterval(user,setUser,false,'USER');
-            console.warn('get cookies',myOwnCookies)
 
-            if(myOwnCookies.isOK !== user.isOK){
-                console.log('have cookies and change state','USER');
-                setUser({...myOwnCookies.value});
-            }else{
-                console.warn('myOwnCookies',myOwnCookies);
-                
-                user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
-                setUser({...user});
-            }
-            
-        },step)
-    })
-    // console.log(user);
+    function addExtraTime(num){
+        user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) + num).timeCookies;
+        setTimeout(()=>{
+            setUser({...user,timeCookies:user.timeCookies});
+        },step);
+    }
+
     return <>
         <h3>Welcome</h3>
         <Name>{user.nickname}</Name>
@@ -59,5 +67,11 @@ export default function yourProfile(props){
             deleteAllCookies();
             setUser({redirect:true});
         }}>Delete cookies</p>
+
+        <p onClick={()=>{
+            addExtraTime(10000);
+        }}>
+            add time +10 sec
+        </p>
     </>
 }

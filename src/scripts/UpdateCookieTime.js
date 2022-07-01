@@ -5,8 +5,7 @@ module.exports = function(newTime){
         let current = cookies[i].split('=');
 
         current[0] = current[0].trim();
-
-        // console.log(current[0],current[0] === 'timeCookies')
+        
         if(current[0] === 'timeCookies'){
             document.cookie = `${current[0]}=${newTime}`;
             break;
@@ -15,7 +14,6 @@ module.exports = function(newTime){
         
 
     }
-    console.log({isOK:true,timeCookies:newTime});
 
     return {isOK:true,timeCookies:newTime}
 }
