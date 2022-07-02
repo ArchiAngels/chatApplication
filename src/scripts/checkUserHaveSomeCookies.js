@@ -10,6 +10,8 @@ module.exports = function(){
         objCookies[current[0].trim()] = current[1];
     }
 
+    objCookies = objCookies.nickname ? objCookies : {};
+
     let result = {...objCookies,isOK:objCookies.logged || false};
     return result
 }

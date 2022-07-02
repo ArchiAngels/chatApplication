@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const MongoChanger = require('../scripts/mongodb/allMongoControllers.js');
+const isAdmin = require('../scripts/ServerScripts/isAdmin.js');
 
 router.use((req, res, next) => {
   console.log('Time: ', Date.now());
   next();
 });
 
-let timeInMs = 20000;
+let timeInMs = 600000;
 
 const TimeExpiresCookies = ()=>{
   return new Date(Date.now() + timeInMs);
@@ -51,8 +52,16 @@ router.post('/loginUser',(req,res)=>{
     }else{
       let isPass = await MongoChanger.isPasswordAndLoginMatch(result.why.user,chunk.nickname,chunk.password);
       if(isPass.isOK){
-
-        res
+        if(isAdmin(chunk.nickname).isOK){
+          return res
+          .status(200)
+          .cookie('logged','true')
+          .cookie('nickname',chunk.nickname)
+          .cookie('admin','YesButNeedToVerify')
+          .cookie('timeCookies',timeInMs)
+          .json({isOK:true,value:{body:isPass}});
+        }
+        return res
           .status(200)
           .cookie('logged','true')
           .cookie('nickname',chunk.nickname)

@@ -17,7 +17,7 @@ let Name = styled.h2`
 export default function yourProfile(props){
 
     let [user,setUser] = React.useState({isOK:false});
-    let step = 15;
+    let step = 50;
 
     if(user.redirect){
         return EXIT();
@@ -30,12 +30,14 @@ export default function yourProfile(props){
             setUser({...SavedCookies.value});
 
         }else if(SavedCookies.isOK && user.isOK){
-
-            user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
-
-            SavedCookies = checkCookies(user,'USER');
+            
+                
 
             setTimeout(()=>{
+                user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
+
+                SavedCookies = checkCookies(user,'USER');
+                // console.log('need update');
                 setUser({...SavedCookies.value,timeCookies:user.timeCookies});
             },step);
 
@@ -50,28 +52,20 @@ export default function yourProfile(props){
         </>
     }
 
-    function addExtraTime(num){
-        user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) + num).timeCookies;
-        setTimeout(()=>{
-            setUser({...user,timeCookies:user.timeCookies});
-        },step);
+    function addZeroIfIsLessThatTen(num){
+        return num  < 10 ? '0' + num: num;
     }
-
     return <>
         <h3>Welcome</h3>
         <Name>{user.nickname}</Name>
+        {user.admin ? <h5>{user.admin}</h5>:''}
+        
         <h3>to your profile!</h3>
-        <h4>Log out in {user.timeCookies} ms</h4>
+        <h4>Log out in {(user.timeCookies/1000).toFixed(2)} seconds</h4>
 
         <p onClick={()=>{
             deleteAllCookies();
             setUser({redirect:true});
         }}>Delete cookies</p>
-
-        <p onClick={()=>{
-            addExtraTime(10000);
-        }}>
-            add time +10 sec
-        </p>
     </>
 }

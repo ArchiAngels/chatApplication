@@ -8,5 +8,5 @@ module.exports = function(){
 
     console.log("All cookies was deleted ");
 
-    return {isOK:true}
+    return {isOK:true,emptyCookies:document.cookie}
 }
