@@ -8,7 +8,7 @@ router.use((req, res, next) => {
   next();
 });
 
-let timeInMs = 600000;
+let timeInMs = 5000;
 
 const TimeExpiresCookies = ()=>{
   return new Date(Date.now() + timeInMs);

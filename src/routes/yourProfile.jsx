@@ -4,20 +4,102 @@ import styled from "styled-components";
 import { Navigate } from "react-router-dom";
 
 import deleteAllCookies from '../scripts/deleteAllCookies.js';
-import UpdateCookieTime from "../scripts/UpdateCookieTime.js";
+// import UpdateCookieTime from "../scripts/UpdateCookieTime.js";
 import checkCookies from '../scripts/checkCookies.js';
 
-let Name = styled.h2`
-    padding:10px;
+import ModalWindow from "../components/ModalPopup/createNewChatRomm.jsx";
+import Timer from "../components/other/timer.jsx";
+
+import TEST from '../../client/assets/avatar.jpeg';
+
+let ContentWrapper = styled.div`
+    width:70vw;
+    height:70vh;
+    display:flex;
+    justify-content:center;
+    // background-color:#00000070;
+    position:relavtive;
+    margin-left:15vw;
+    margin-top:15vh;
+`;
+
+let ContentPart = styled.div`
+    width:50%;
+    height:100%;
+    // background-color:#ffffff30;
+    position:relative;
+    padding:0 1rem;
+`;
+
+let AvatarWrap = styled.div`
+    &::after{
+        
+        width:200px;
+        height:200px;
+        top:1rem;
+        left:calc(50% - 100px);
+        z-index:5;
+        border-radius:50%;
+        position:absolute;
+        text-align:center;
+        color:#fff;
+        box-sizing:border-box;
+        padding-top:100px;
+        transition:background-color 0.15s;
+    }
+    &:hover{
+        cursor:pointer;
+        &::after{
+            content:"change avatar";
+            background-color:#00000070;
+        }
+
+    }
+`;
+
+let AvatarUser = styled.img`
     background-color:#000;
+    border-radius:50%;
+    width:200px;
+    height:200px;
+    display:block;
+    margin-left:calc(50% - 100px);   
+`;
+
+let UserWrap = styled.div`
+    width:100%;
+    background-color:#f8c2c287;
+    text-align:center;
+    padding:1rem;
+    
+    border-radius: 1rem;
+`;
+
+let Paragraph = styled.p`
+    padding:1rem;
+`;
+
+let Button = styled.p`
+    margin: 0 0 1rem 0;
+    padding:1rem;
+    display:inline-block;
+    border-radius:1rem;
     color:#fff;
-    letter-spacing:1px;
+    background-color:rgba(122, 81, 164, 0.53);
+    user-select:none;
+    &:hover{
+        text-decoration:underline;
+        cursor:pointer;
+    }
+
+
 `;
 
 export default function yourProfile(props){
 
     let [user,setUser] = React.useState({isOK:false});
-    let step = 50;
+    let [isModalVisible,setModalVisible] = React.useState(false);
+    let OneTimeInMinute = 60000;
 
     if(user.redirect){
         return EXIT();
@@ -30,16 +112,14 @@ export default function yourProfile(props){
             setUser({...SavedCookies.value});
 
         }else if(SavedCookies.isOK && user.isOK){
-            
-                
 
             setTimeout(()=>{
-                user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
-
+            //     user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
+                console.log("Get actuall cookies");
                 SavedCookies = checkCookies(user,'USER');
-                // console.log('need update');
+            //     // console.log('need update');
                 setUser({...SavedCookies.value,timeCookies:user.timeCookies});
-            },step);
+            },OneTimeInMinute);
 
         }else{
             return EXIT();    
@@ -52,20 +132,48 @@ export default function yourProfile(props){
         </>
     }
 
-    function addZeroIfIsLessThatTen(num){
-        return num  < 10 ? '0' + num: num;
-    }
+    
     return <>
-        <h3>Welcome</h3>
-        <Name>{user.nickname}</Name>
-        {user.admin ? <h5>{user.admin}</h5>:''}
         
-        <h3>to your profile!</h3>
-        <h4>Log out in {(user.timeCookies/1000).toFixed(2)} seconds</h4>
 
-        <p onClick={()=>{
-            deleteAllCookies();
-            setUser({redirect:true});
-        }}>Delete cookies</p>
+        {isModalVisible ? <ModalWindow isVisible={isModalVisible} changeState = {setModalVisible}/> : ''}
+
+        <ContentWrapper>
+            <ContentPart>
+                <UserWrap>
+                    <AvatarWrap onClick={()=>{
+                        console.log("CHANGE AVATAR IN PROGRESS");
+                    }}>
+                        <AvatarUser alt={user.nickname + ' avatar'} src={TEST ? TEST : ""}></AvatarUser>
+                    </AvatarWrap>
+                    
+                    <Paragraph>{user.nickname}</Paragraph>
+                </UserWrap>
+
+                
+                {user.admin ? <Paragraph>Admin : {user.admin}</Paragraph>:''}
+
+                
+            </ContentPart>
+            <ContentPart style={{backgroundColor:"#5195a487"}}>
+                <Paragraph>
+                    <Timer time={user.timeCookies} exit = {EXIT}></Timer>
+                </Paragraph>
+
+                <Button onClick={()=>{
+
+                    deleteAllCookies();
+                    setUser({redirect:true});
+
+                }}>Delete cookies</Button>
+
+                <br/>
+
+                <Button onClick={()=>{
+                    console.log("Create new chat room");
+                    setModalVisible(!isModalVisible);
+                }}>Create New Chat Room</Button>
+            </ContentPart>
+        </ContentWrapper>
     </>
 }
