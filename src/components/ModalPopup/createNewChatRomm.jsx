@@ -12,23 +12,21 @@ let DarkWindow = styled.div`
     left:0;
     text-align:center;
     position:absolute;
+    z-index:6;
 
 `;
 
 export default function modalWindow(props){
 
-    let [isVisible,setVisible] = React.useState(false || props.isVisible);
+    console.log('create new modal ::',props.isVisible);
 
-    console.log('create new modal ::',isVisible,props.isVisible);
-
-    if(!isVisible){
+    if(!props.isVisible){
         return <></>
     }
 
     function closeModalWindow(){
-        setVisible(!isVisible);
-        props.setModalVisible(!isVisible);
-        console.log(`show or hide ;:${isVisible}`);
+        props.changeState(!props.isVisible);
+        console.log(`show or hide ;:${!props.isVisible}`);
     }
 
     return <>

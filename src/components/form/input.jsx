@@ -10,8 +10,7 @@ import styled from "styled-components";
 // 
 // 
 
-import Hidden from '../../../client/assets/svg/hidden.svg';
-import Showed from '../../../client/assets/svg/showed.svg';
+import IconEye from '../other/iconEye.jsx';
 
 
 let InputForm = styled.input`
@@ -39,40 +38,11 @@ let LabelForm = styled.label`
     font-weight:bold;
 `;
 
-let WrapIcon = styled.div`
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    // border:1px solid #000;
-    position:absolute;
-    display:flex;
-    justify-content:center;
-    margin-top:-3rem;
-    margin-left:17rem;
-    background:#fff;
-    transition:transform 0.15s;
-    &:hover{
-        cursor:pointer;
-    }
-    &:active{
-        transform:translateY(10px);
-    }
-`;
 
-function IconChanger(props){
-
-    return <>
-        <WrapIcon onClick = {()=>{props.change(!props.currentIcon)}}>
-            <img alt="eye icon" src={props.currentIcon ? Hidden: Showed} />
-        </WrapIcon>
-        
-    </>
-}
 
 export default function Input(props){
 
-    let [isVisible,setVisible] = React.useState(false);
-
+    let [isVisible,setVisible] = React.useState(true);
     props.needIconChanger ? props.needIconChanger : false;
 
     let conditionTypeInput = props.needIconChanger 
@@ -92,6 +62,6 @@ export default function Input(props){
          autoComplete='off'
         />
         
-        {props.needIconChanger ? <IconChanger change={setVisible} currentIcon={isVisible}/> :""}
+        {props.needIconChanger ? <IconEye initialState={false} changeState ={setVisible} style={{marginTop:"-3rem",marginLeft:'17rem'}}/> :""}
     </>
 }

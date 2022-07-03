@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import App from "./App.jsx";
+import Nav from "./components/NavBar/Nav.jsx";
 
 import Welcome from "./routes/welcome.jsx";
 import YourProfile from "./routes/yourProfile.jsx";
@@ -19,7 +20,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <>
       <BrowserRouter>
-      {/* <Nav/> */}
+      
+      <Nav/>
+
         <Routes>
           <Route path="/chat" element={<App />} />
           <Route path="/firstContact" element = {<Welcome />}/>

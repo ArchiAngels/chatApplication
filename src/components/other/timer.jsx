@@ -21,12 +21,12 @@ export default function Timer(props){
         return addZeroIfIsLessThatTen((num/1000).toFixed(2))
     }
 
-    if(timer <= 0){
-        deleteAllCookies();
-        return props.exit();
-    }
+    // if(timer <= 0){
+    //     deleteAllCookies();
+    //     return props.exit();
+    // }
 
     return <>
-        Log out in {secondsDraw(timer)} seconds
+        {secondsDraw(timer)}        
     </>
 } 

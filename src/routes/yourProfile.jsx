@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Navigate } from "react-router-dom";
-
 import deleteAllCookies from '../scripts/deleteAllCookies.js';
-// import UpdateCookieTime from "../scripts/UpdateCookieTime.js";
 import checkCookies from '../scripts/checkCookies.js';
+import EXIT from "../components/other/exit.jsx";
 
 import ModalWindow from "../components/ModalPopup/createNewChatRomm.jsx";
 import Timer from "../components/other/timer.jsx";
@@ -99,7 +97,6 @@ export default function yourProfile(props){
 
     let [user,setUser] = React.useState({isOK:false});
     let [isModalVisible,setModalVisible] = React.useState(false);
-    let OneTimeInMinute = 60000;
 
     if(user.redirect){
         return EXIT();
@@ -113,23 +110,11 @@ export default function yourProfile(props){
 
         }else if(SavedCookies.isOK && user.isOK){
 
-            setTimeout(()=>{
-            //     user.timeCookies = UpdateCookieTime(parseInt(user.timeCookies) - step).timeCookies;
-                console.log("Get actuall cookies");
-                SavedCookies = checkCookies(user,'USER');
-            //     // console.log('need update');
-                setUser({...SavedCookies.value,timeCookies:user.timeCookies});
-            },OneTimeInMinute);
+            // console.log('all is ok');
 
         }else{
             return EXIT();    
         }
-    }
-    
-    function EXIT(){
-        return <>
-            <Navigate to='/firstContact' replace={true}/>
-        </>
     }
 
     
@@ -157,7 +142,9 @@ export default function yourProfile(props){
             </ContentPart>
             <ContentPart style={{backgroundColor:"#5195a487"}}>
                 <Paragraph>
-                    <Timer time={user.timeCookies} exit = {EXIT}></Timer>
+                    Log out in  (
+                        <Timer time={user.timeCookies} exit = {EXIT}></Timer> 
+                    ) seconds
                 </Paragraph>
 
                 <Button onClick={()=>{

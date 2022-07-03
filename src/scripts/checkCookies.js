@@ -6,7 +6,9 @@ module.exports = function CheckCookies(obj,whoPASSED = 'dont know who'){
     let result = checkUserHaveSomeCookies();
 
     function ChangeState(objNew){
-        return {value:objNew,isOK:result.isOK};
+        let isOK =  objNew.isOK === undefined ? result.isOK : objNew.isOK;
+        let ObjToReturn = {value:objNew,isOK: isOK  };
+        return ObjToReturn;
     }
 
     if(!result.isOK){
@@ -23,7 +25,7 @@ module.exports = function CheckCookies(obj,whoPASSED = 'dont know who'){
             
             if(parseInt(result.timeCookies) <= 0){
                 deleteAllCookies();
-                return ChangeState({redirect:true});
+                return ChangeState({redirect:true,isOK:false,name:'timeUP'});
             }else{
                 return ChangeState({...result});
             }    
