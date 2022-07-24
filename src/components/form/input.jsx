@@ -42,12 +42,14 @@ let LabelForm = styled.label`
 
 export default function Input(props){
 
-    let [isVisible,setVisible] = React.useState(true);
+    let init = false;
+    let [isVisible,setVisible] = React.useState(init);
     props.needIconChanger ? props.needIconChanger : false;
 
     let conditionTypeInput = props.needIconChanger 
                                 ? isVisible 
                                     ? 'text' : 'password'
+                                    // ? "password" : 'text'
                                 : 'text';
 
     return <>
@@ -62,6 +64,6 @@ export default function Input(props){
          autoComplete='off'
         />
         
-        {props.needIconChanger ? <IconEye initialState={false} changeState ={setVisible} style={{marginTop:"-3rem",marginLeft:'17rem'}}/> :""}
+        {props.needIconChanger ? <IconEye initialState={init} changeState ={setVisible} style={{marginTop:"-3rem",marginLeft:'17rem'}}/> :""}
     </>
 }

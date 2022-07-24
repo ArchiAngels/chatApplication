@@ -34,8 +34,9 @@ let SendButton = styled.input`
 
 `;
 
-let urlLogin = "/api/loginUser";
-let urlRegister = "/api/createNewUser";
+let urlLogin = "/apiUser/loginUser";
+let urlRegister = "/apiUser/createNewUser";
+let urlCreateNewRoom = '/apiRoom/createNewRoom';
 
 
 export default function Form(props){
@@ -79,16 +80,21 @@ export default function Form(props){
             bodyAnswer = parsedResponse.isOK? v.body : v.why;
             condition = parsedResponse.isOK;
             
-            // console.log(parsedResponse)
+            console.warn(parsedResponse)
+
             let msg = ``;
             for(let item in bodyAnswer){
               msg += `   ${item} -> ${bodyAnswer[item]} `;
             }
             value = msg;
 
+            console.warn(msg)
+
           }else{
             reason = xhr.error || xhr.why || 'Unexpected error';
           }
+
+          
 
           result = xhr.isOK ? value : reason;
 
@@ -106,7 +112,9 @@ export default function Form(props){
     }
 
     return <>
-         <form method="POST" action={isLogin ? urlLogin : urlRegister} onSubmit={e => {HandleSubmit(e)}}>
+         <form method="POST" 
+         action={isLogin ? urlLogin : urlRegister} 
+         onSubmit={e => {HandleSubmit(e)}}>
 
             <p onClick={()=>{
                 ChangeFormRegisterLogin();

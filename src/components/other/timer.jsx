@@ -14,17 +14,18 @@ export default function Timer(props){
     },step)
 
     function addZeroIfIsLessThatTen(num){
+        num = Math.abs(num);
         return num  < 10 ? '0' + num: num;
     }
 
     function secondsDraw(num){
-        return addZeroIfIsLessThatTen((num/1000).toFixed(2))
+        return addZeroIfIsLessThatTen((num/60000).toFixed(0))
     }
 
-    // if(timer <= 0){
-    //     deleteAllCookies();
-    //     return props.exit();
-    // }
+    if(timer <= 0){
+        deleteAllCookies();
+        return props.exit();
+    }
 
     return <>
         {secondsDraw(timer)}        

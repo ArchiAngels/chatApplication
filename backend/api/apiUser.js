@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const MongoChanger = require('../scripts/mongodb/allMongoControllers.js');
+const Response = require('../scripts/ServerScripts/AllRespnonsesController.js');
 const isAdmin = require('../scripts/ServerScripts/isAdmin.js');
 
 router.use((req, res, next) => {
@@ -8,7 +9,9 @@ router.use((req, res, next) => {
   next();
 });
 
-let timeInMs = 900000;
+let timeInMs = 30 * 60 * 1000 ;
+
+// let timeInMs = 10*1000 ;
 
 const TimeExpiresCookies = ()=>{
   return new Date(Date.now() + timeInMs);
@@ -27,13 +30,16 @@ router.post('/createNewUser',(req,res)=>{
           .cookie('logged','true')
           .cookie('nickname',chunk.nickname)
           .cookie('timeCookies',timeInMs)
-          .json({isOK:true,value:{body:{msg:"Succesfully created"}}})
+          .json(Response.Good({msg:"Succesfully created"}))
+          // .json({isOK:true,value:{body:{}})
       }else{
-        res.json({isOK:false,value:new_user});
+        res.json(Response.Bad(new_user))
+        // res.json({isOK:false,value:new_user});
       }
     }else{
       console.log(result);
-      res.json({isOK:false,value:result});
+      res.json(Response.Bad(result))
+      // res.json({isOK:false,value:result});
     }
     
   })
@@ -59,17 +65,20 @@ router.post('/loginUser',(req,res)=>{
           .cookie('nickname',chunk.nickname)
           .cookie('admin','YesButNeedToVerify')
           .cookie('timeCookies',timeInMs)
-          .json({isOK:true,value:{body:isPass}});
+          .json(Response.Good(isPass))
+          // .json({isOK:true,value:{body:isPass}});
         }
         return res
           .status(200)
           .cookie('logged','true')
           .cookie('nickname',chunk.nickname)
           .cookie('timeCookies',timeInMs)
-          .json({isOK:true,value:{body:isPass}});
+          .json(Response.Good(isPass))
+          // .json({isOK:true,value:{body:isPass}});
 
       }else{
-        res.json({isOK:false,value:{why:isPass}});
+        res.json(Response.Bad({why:isPass}))
+        // res.json({isOK:false,value:{why:isPass}});
       }
       
     }

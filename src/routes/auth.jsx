@@ -17,9 +17,10 @@ export default function Auth(props) {
     return EXIT();
   }
 
-  // if(user.isOK === true && isLoading){
-  //   setLoading(false);
-  // }
+  if(user.isOK === true && isLoading){
+    console.log(`FINALL::`,user,user.CR !== undefined);
+    setLoading(false);
+  }
 
   if(times <= 0){
     // alert(`No more times ::${times} and you need login again`);
@@ -71,8 +72,18 @@ export default function Auth(props) {
     </>
   }
 
+  function NextWindow(){
+    if(user.CR !== undefined){
+      return <Navigate to ={`/chatRoom/${user.CR}`} replace={true}/>;
+    }else{
+      return <Navigate to={'/yourProfile'} replace={true} />;
+    }
+  }
+
+  
+
   return <>
-    <Navigate to={'/yourProfile' || `/404`} replace={true} />
+    <NextWindow />    
   </>
   
   

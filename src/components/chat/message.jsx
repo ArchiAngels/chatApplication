@@ -34,6 +34,14 @@ let TextRight = styled.div`
     text-align:right;
 `;
 
+let Name = styled.span`
+    background-color:#000;
+    color:white;
+    padding:2px;
+    box-sizing:border-box;
+
+`;
+
 export default function message(props){
 
     MessBorder = styled(MessBorder)`
@@ -52,7 +60,7 @@ export default function message(props){
 
                 <TextRight>
 
-                    <MessageText>{props.who}</MessageText>
+                    <MessageText><Name>{props.who}</Name></MessageText>
 
                     <MessageText> {TimeLessAtTen(props.time.h)} : {TimeLessAtTen(props.time.m)}</MessageText>
 

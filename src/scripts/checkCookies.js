@@ -1,7 +1,7 @@
 const checkUserHaveSomeCookies = require("./checkUserHaveSomeCookies.js");
 const deleteAllCookies = require('./deleteAllCookies.js');
 
-module.exports = function CheckCookies(obj,whoPASSED = 'dont know who'){
+module.exports = function CheckCookies(obj = {isOK:false},whoPASSED = 'dont know who'){
     
     let result = checkUserHaveSomeCookies();
 

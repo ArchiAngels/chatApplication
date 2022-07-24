@@ -24,7 +24,7 @@ let WrapIcon = styled.div`
 
 export default function IconChanger(props){
 
-    let [isVisible,setVisible] = React.useState(props.initialState || true);
+    let [isVisible,setVisible] = React.useState(props.initialState ?? true);
 
     return <>
         <WrapIcon onClick = {()=>{

@@ -1,0 +1,84 @@
+import React from "react";
+
+
+import { useLocation } from "react-router-dom";
+
+// import deleteAllCookies from '../../scripts/deleteAllCookies.js';
+import EXIT from "./exit.jsx";
+import checkCookies from '../../scripts/checkCookies.js';
+
+export default function CookieChecker(props){
+
+
+    let step = 1000;
+    let timeConstant = 60000;
+    let location = useLocation();
+    let [timer,setTimer] = React.useState({time:timeConstant,redirect:false});
+    let nameRandom = parseInt(Math.random()*999)+1;
+    
+    let isFirstContact = location.pathname === '/firstContact';
+    let isAuth = location.pathname === '/auth';
+
+
+    console.log('CookieChecker Drawed');
+    if(isAuth || isFirstContact){
+        // console.log("SKIP");
+    }else{
+        callMySetTimeout();
+    }
+
+    if(isFirstContact && timer.redirect){
+        setTimer({...timer,time:timeConstant,redirect:false});
+    }else if(timer.redirect){
+        return EXIT();
+    }else{
+        // console.log('nothing',timer.time);
+        
+    }
+
+
+    
+    
+
+    
+        
+    
+    
+
+    function CheckAndRedirectCookies(){
+
+        if(isFirstContact){
+            // console.log("nothing FC");
+        }else{
+            let SavedCookies = checkCookies({isOK:true});
+
+            console.warn(SavedCookies);
+
+            if(!SavedCookies.isOK){
+                // console.log('REDIRECT')
+                setTimer({redirect:true});
+            }else{
+                // console.log('NextTIme',SavedCookies);     
+                setTimer({...timer,time:timeConstant});           
+            }
+        }        
+        
+    }
+
+    function callMySetTimeout(){
+        return setTimeout(()=>{
+            console.log("TIME OUT :: ",nameRandom);
+            // console.log('timer tic tac',timer);
+            if(timer.time <= 0){
+                CheckAndRedirectCookies();          
+            }else{            
+                setTimer({...timer,time:timer.time - step});
+            }
+            
+        },step);
+    }
+
+    return <>
+        <p>empty component</p>
+    </>
+}

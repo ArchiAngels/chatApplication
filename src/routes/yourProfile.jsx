@@ -1,12 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
+import { Link } from "react-router-dom";
+
 import deleteAllCookies from '../scripts/deleteAllCookies.js';
 import checkCookies from '../scripts/checkCookies.js';
 import EXIT from "../components/other/exit.jsx";
 
 import ModalWindow from "../components/ModalPopup/createNewChatRomm.jsx";
 import Timer from "../components/other/timer.jsx";
+import AdminPanel from '../components/admin/admin.jsx';
 
 import TEST from '../../client/assets/avatar.jpeg';
 
@@ -97,6 +100,14 @@ export default function yourProfile(props){
 
     let [user,setUser] = React.useState({isOK:false});
     let [isModalVisible,setModalVisible] = React.useState(false);
+    let [serverMessages,setServerMessages] = React.useState([]);
+    let randomRoom = parseInt(Math.random()* 999) + 1;
+
+
+    props.socket.emit('1234','5678');
+    props.socket.on('1234',(arg)=>{
+        setServerMessages([...serverMessages,arg]);
+    })
 
     if(user.redirect){
         return EXIT();
@@ -136,15 +147,15 @@ export default function yourProfile(props){
                 </UserWrap>
 
                 
-                {user.admin ? <Paragraph>Admin : {user.admin}</Paragraph>:''}
+                {user.admin ? <AdminPanel />:''}
 
                 
             </ContentPart>
             <ContentPart style={{backgroundColor:"#5195a487"}}>
                 <Paragraph>
-                    Log out in  (
+                    Log out in  
                         <Timer time={user.timeCookies} exit = {EXIT}></Timer> 
-                    ) seconds
+                     min
                 </Paragraph>
 
                 <Button onClick={()=>{
@@ -160,6 +171,13 @@ export default function yourProfile(props){
                     console.log("Create new chat room");
                     setModalVisible(!isModalVisible);
                 }}>Create New Chat Room</Button>
+
+                <Link to={'/chatRoom/'+randomRoom}> join to room {randomRoom}</Link>
+
+                <Paragraph>Message from server:</Paragraph>
+                {serverMessages.map((e,i)=>{
+                    return <Paragraph key={e+i}>{e}</Paragraph>
+                })}
             </ContentPart>
         </ContentWrapper>
     </>

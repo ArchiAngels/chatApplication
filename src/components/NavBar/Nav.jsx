@@ -1,11 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-
-// import deleteAllCookies from '../../scripts/deleteAllCookies.js';
-import EXIT from "../other/exit.jsx";
-import checkCookies from '../../scripts/checkCookies.js';
 import IconEye from '../other/iconEye.jsx';
+
+// import CookieChecker from '../other/cookieChecker.jsx';
 
 let ContentWrap = styled.div`
     width:150px;
@@ -21,69 +18,13 @@ let ContentWrap = styled.div`
 `;
 
 export default function Nav(props){
-
-    // console.log("NAV DRAWED");    
-    let step = 1000;
-    let timeConstant = 60000;
-    let location = useLocation();
-    let [timer,setTimer] = React.useState({time:timeConstant,redirect:false});
-    let [isVisible,setVisible] = React.useState(true);
-    let isFirstContact = location.pathname === '/firstContact';
-    let isAuth = location.pathname === '/auth';
-
-    if(isAuth || isFirstContact){
-        // console.log("SKIP");
-    }else{
-        callMySetTimeout();
-    }
-
-    
+    let [isVisible,setVisible] = React.useState(false);
+       
     
 
-    if(isFirstContact && timer.redirect){
-        setTimer({...timer,time:timeConstant,redirect:false});
-    }else if(timer.redirect){
-        return EXIT();
-    }else{
-        // console.log('nothing',timer.time);
-        
-    }
-        
+    console.log("NAV DRAWED",isVisible); 
+
     
-    
-
-    function CheckAndRedirectCookies(){
-
-        if(isFirstContact){
-            // console.log("nothing FC");
-        }else{
-            let SavedCookies = checkCookies({isOK:true});
-
-            console.warn(SavedCookies);
-
-            if(!SavedCookies.isOK){
-                // console.log('REDIRECT')
-                setTimer({redirect:true});
-            }else{
-                // console.log('NextTIme',SavedCookies);     
-                setTimer({...timer,time:timeConstant});           
-            }
-        }        
-        
-    }
-
-    function callMySetTimeout(){
-        return setTimeout(()=>{
-            // console.log('timer tic tac',timer);
-            if(timer.time <= 0){
-                CheckAndRedirectCookies();          
-            }else{            
-                setTimer({...timer,time:timer.time - step});
-            }
-            
-        },step);
-    }
-
 
     return <>
         <ContentWrap style={{left: isVisible? "0":"-150px"}}>

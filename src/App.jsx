@@ -4,6 +4,8 @@ import styled from "styled-components";
 import Message from './components/chat/message.jsx';
 import EnterMessage from './components/chat/enterMessage.jsx';
 
+
+
 let w_chat = 60;
 let h_chat = 80;
 
@@ -51,11 +53,15 @@ const HistoryOfChat_custom = styled.div`
 
 `;
 
-export default function App() {
+export default function App(props) {
 
     let [messages,setMessages] = React.useState([])
 
-    let YourName = 'You';
+    let YourName = props.nickname || 'You';
+      
+    // WS.on('message', function message(data) {
+    //     console.log('received: %s', data);
+    // });
 
 
     
@@ -71,7 +77,9 @@ export default function App() {
                             return <Message who={e.who} msg={e.msg} time={e.time} myself={e.myself} key={i+'x'}/>
                         })}
                     </HistoryOfChat_custom>
-                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName}/>
+                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} 
+                        WS={WS}
+                        />
                 </Chat_container>
             {/* </Title> */}
         </Wrapper>

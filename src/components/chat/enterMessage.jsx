@@ -43,6 +43,12 @@ export default function enterMessage(props){
             // console.log(msg);
             let newMess = CreateObjMess(msg,props.YourName,true);
             // setMessages([...messages,newMess]);
+            // props.WS.on('open', function open() {
+                
+            // });
+
+            props.WS.send(newMess.msg);
+
             props.setMessages([...props.messages,newMess]);
             e.target.value = '';
         }else{
