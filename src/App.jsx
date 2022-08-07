@@ -58,6 +58,8 @@ export default function App(props) {
     let [messages,setMessages] = React.useState([])
 
     let YourName = props.nickname || 'You';
+
+    const {socket} = props;
       
     // WS.on('message', function message(data) {
     //     console.log('received: %s', data);
@@ -77,9 +79,7 @@ export default function App(props) {
                             return <Message who={e.who} msg={e.msg} time={e.time} myself={e.myself} key={i+'x'}/>
                         })}
                     </HistoryOfChat_custom>
-                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} 
-                        WS={WS}
-                        />
+                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} socket={socket}/>
                 </Chat_container>
             {/* </Title> */}
         </Wrapper>

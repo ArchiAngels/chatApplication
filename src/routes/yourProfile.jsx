@@ -100,14 +100,7 @@ export default function yourProfile(props){
 
     let [user,setUser] = React.useState({isOK:false});
     let [isModalVisible,setModalVisible] = React.useState(false);
-    let [serverMessages,setServerMessages] = React.useState([]);
     let randomRoom = parseInt(Math.random()* 999) + 1;
-
-
-    props.socket.emit('1234','5678');
-    props.socket.on('1234',(arg)=>{
-        setServerMessages([...serverMessages,arg]);
-    })
 
     if(user.redirect){
         return EXIT();
@@ -173,11 +166,6 @@ export default function yourProfile(props){
                 }}>Create New Chat Room</Button>
 
                 <Link to={'/chatRoom/'+randomRoom}> join to room {randomRoom}</Link>
-
-                <Paragraph>Message from server:</Paragraph>
-                {serverMessages.map((e,i)=>{
-                    return <Paragraph key={e+i}>{e}</Paragraph>
-                })}
             </ContentPart>
         </ContentWrapper>
     </>

@@ -41,9 +41,9 @@ root.render(
         
           {/* <Route path="/chat" element={<App />} /> */}
           <Route path="/*" element = {<Welcome />}/>
-          <Route path="/yourProfile" element = {<YourProfile socket={socket} />}/>
+          <Route path="/yourProfile" element = {<YourProfile />}/>
           <Route path="/auth" element = {<Auth />}/>
-          <Route path="/chatRoom/:id" element = {<ChatRoom/>}/>
+          <Route path="/chatRoom/:id" element = {<ChatRoom socket={socket}/>}/>
         </Routes>
 
       </BrowserRouter>

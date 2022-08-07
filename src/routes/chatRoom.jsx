@@ -28,6 +28,7 @@ let InfoAboutChatRoomContainer = styled.div`
 export default function ChatRoom(props){
 
     let [user,setUser] = React.useState(3);
+    const {socket} = props;
 
     React.useEffect(()=>{
         if(user <= 0){
@@ -59,6 +60,6 @@ export default function ChatRoom(props){
 
         </InfoAboutChatRoomContainer>
 
-        <Chat nickname={user.nickname}/>
+        <Chat nickname={user.nickname} socket={socket}/>
     </>
 }

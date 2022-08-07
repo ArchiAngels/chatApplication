@@ -36,6 +36,8 @@ const TextArea_custom = styled.textarea`
 
 export default function enterMessage(props){
 
+    const {socket} = props;
+
 
     function HadleSubmitMessage(e){
         if(e.key == 'Enter'){
@@ -46,8 +48,6 @@ export default function enterMessage(props){
             // props.WS.on('open', function open() {
                 
             // });
-
-            props.WS.send(newMess.msg);
 
             props.setMessages([...props.messages,newMess]);
             e.target.value = '';
