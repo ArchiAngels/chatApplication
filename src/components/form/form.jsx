@@ -65,7 +65,7 @@ export default function Form(props){
     
         await Send(method, url,values,(xhr)=>{
 
-          console.warn(xhr);
+          // console.warn(xhr);
 
 
           let value,reason,result,parsedResponse,condition;
@@ -80,7 +80,7 @@ export default function Form(props){
             bodyAnswer = parsedResponse.isOK? v.body : v.why;
             condition = parsedResponse.isOK;
             
-            console.warn(parsedResponse)
+            // console.warn(parsedResponse)
 
             let msg = ``;
             for(let item in bodyAnswer){
@@ -88,7 +88,7 @@ export default function Form(props){
             }
             value = msg;
 
-            console.warn(msg)
+            // console.warn(msg)
 
           }else{
             reason = xhr.error || xhr.why || 'Unexpected error';

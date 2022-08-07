@@ -39,12 +39,12 @@ const HistoryOfChat_custom = styled.div`
     background:#fff;
     overflow-y:scroll;
 
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    // -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    // scrollbar-width: none;  /* Firefox */
 
-    &::-webkit-scrollbar { 
-        display: none;  /* Safari and Chrome */
-    }
+    // &::-webkit-scrollbar { 
+    //     display: none;  /* Safari and Chrome */
+    // }
 
     & > div{
         margin:30px;
@@ -59,7 +59,7 @@ export default function App(props) {
 
     let YourName = props.nickname || 'You';
 
-    const {socket} = props;
+    const {Manager} = props;
       
     // WS.on('message', function message(data) {
     //     console.log('received: %s', data);
@@ -76,10 +76,10 @@ export default function App(props) {
                 <Chat_container>
                     <HistoryOfChat_custom>
                         {messages.map((e,i)=>{
-                            return <Message who={e.who} msg={e.msg} time={e.time} myself={e.myself} key={i+'x'}/>
+                            return <Message who={e.who} msg={e.msg} time={e.time} me={e.me} key={i+'x'}/>
                         })}
                     </HistoryOfChat_custom>
-                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} socket={socket}/>
+                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
                 </Chat_container>
             {/* </Title> */}
         </Wrapper>

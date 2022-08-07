@@ -25,7 +25,7 @@ let MessBorder = styled.div`
     max-width:340px;
 
 
-    background:lightcoral;
+    
 
 `;
 
@@ -44,11 +44,14 @@ let Name = styled.span`
 
 export default function message(props){
 
+    const { me, msg, who, time} = props;
+
     MessBorder = styled(MessBorder)`
-        margin-left:${props.myself ? 'auto' : '0px'};
+        margin-left:${me ? 'auto' : '0px'};
+        background:${me ? 'lightcoral' : 'lavender'};
     `;
 
-    function TimeLessAtTen(num){
+    function timeLessThatTen(num){
         return num < 10 ? '0'+num:num;
     }
     return <>
@@ -56,13 +59,13 @@ export default function message(props){
         <MessContainer>
 
             <MessBorder>
-                <MessageText>{props.msg}</MessageText>
+                <MessageText>{msg}</MessageText>
 
                 <TextRight>
 
-                    <MessageText><Name>{props.who}</Name></MessageText>
+                    <MessageText><Name>{who}</Name></MessageText>
 
-                    <MessageText> {TimeLessAtTen(props.time.h)} : {TimeLessAtTen(props.time.m)}</MessageText>
+                    <MessageText> {timeLessThatTen(time.h)} : {timeLessThatTen(time.m)}</MessageText>
 
                 </TextRight>
             </MessBorder>

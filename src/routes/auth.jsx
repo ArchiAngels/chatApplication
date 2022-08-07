@@ -11,14 +11,14 @@ export default function Auth(props) {
   let [isLoading,setLoading] = React.useState(true);
   let step = 510;
 
-  console.log(`Current Try:: ${times}`);
+  // console.log(`Current Try:: ${times}`);
   if(user.redirect){
     // console.log(user);
     return EXIT();
   }
 
   if(user.isOK === true && isLoading){
-    console.log(`FINALL::`,user,user.CR !== undefined);
+    // console.log(`FINALL::`,user,user.CR !== undefined);
     setLoading(false);
   }
 
@@ -30,7 +30,7 @@ export default function Auth(props) {
     </>
   }else{
     let SavedCookies = checkCookies(user,'auth');
-    console.log(SavedCookies,document.cookie,SavedCookies === document.cookie);
+    // console.log(SavedCookies,document.cookie,SavedCookies === document.cookie);
     // let SavedCookies = {value:{isOK:false}};
 
     if(!SavedCookies.isOK){

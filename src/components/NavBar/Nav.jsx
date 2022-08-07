@@ -22,7 +22,7 @@ export default function Nav(props){
        
     
 
-    console.log("NAV DRAWED",isVisible); 
+    // console.log("NAV DRAWED",isVisible); 
 
     
 

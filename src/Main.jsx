@@ -17,12 +17,9 @@ import CookieChecker from './components/other/CookieChecker.jsx';
 import Timer from "./components/other/timer.jsx";
 
 
-import {io} from 'socket.io-client';
-const socket = io('ws://localhost:8080');
+import { Manager } from 'socket.io-client';
 
-socket.on("connect", () => {
-    console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-});
+const manager = new Manager('ws://localhost:8080');
 
 
 
@@ -43,7 +40,7 @@ root.render(
           <Route path="/*" element = {<Welcome />}/>
           <Route path="/yourProfile" element = {<YourProfile />}/>
           <Route path="/auth" element = {<Auth />}/>
-          <Route path="/chatRoom/:id" element = {<ChatRoom socket={socket}/>}/>
+          <Route path="/chatRoom/:id" element = {<ChatRoom Manager={manager}/>}/>
         </Routes>
 
       </BrowserRouter>
