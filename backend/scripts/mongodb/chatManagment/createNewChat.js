@@ -1,22 +1,18 @@
 const mainMongoodb = require('../mainMongoodb.js');
 
-module.exports = async function(collectionName = 'REQUIRED'){
+module.exports = async function(){
 
-    if(collectionName === 'REQUIRED'){
-        return Promise.reject('enter collection name');
-    }
-
-    console.log('getIdConstant:::start creating')    
+    console.log('createNewChat:::start creating')    
 
     function passFunction(client,database,resolve,reject,stopTimeOut){
 
         return new Promise(async function(myresolve,myreject){
 
 
-            const selectedCollection = database.collection(collectionName);           
+            const chats = database.collection('users');           
 
             const query = {TYPE:"CONSTANT"};
-            await selectedCollection.findOne(query,async function(err,res){
+            await users.findOne(query,async function(err,res){
 
                 await client.close();
 

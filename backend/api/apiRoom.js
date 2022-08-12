@@ -20,4 +20,14 @@ router.post('/createNewRoom',(req,res)=>{
     // res.json({isOK:true,body})
 })
 
+router.post('/createPublic',(req,res)=>{
+  console.log("CATCHE HER in apiRooms ");
+  MongoChanger.initPublicChatCollection().then(value=>{
+    res.json(Response.Good({message:"created"}));
+  }).catch(reason=>{
+    res.json(Response.Bad({message:reason}))
+  })
+  // res.json({isOK:true,body})
+})
+
 module.exports = router;

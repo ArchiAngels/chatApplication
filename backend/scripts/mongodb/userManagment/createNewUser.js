@@ -12,7 +12,7 @@ module.exports = async function(login,password){
 
         return new Promise(async function(myresolve,myreject){
 
-            let id = await getId();
+            let id = await getId('users');
         
             if(id.isOK){
                 let users = database.collection('users')
@@ -33,7 +33,7 @@ module.exports = async function(login,password){
                     if(err) return reject(err)
 
                     console.log("new user",res);
-                    await setId(++id.body.idUser);
+                    await setId('users',++id.body.idUser);
 
                     resolve(res);
                     

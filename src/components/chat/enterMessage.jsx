@@ -85,7 +85,10 @@ export default function enterMessage(props){
             who:who,
             time:{
                 h:curentTime.getHours(),
-                m:curentTime.getMinutes()
+                m:curentTime.getMinutes(),
+                day:curentTime.getDay(),
+                month:curentTime.getMonth(),
+                year:curentTime.getFullYear(),
             },
             me:me,
         }

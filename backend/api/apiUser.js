@@ -86,4 +86,71 @@ router.post('/loginUser',(req,res)=>{
   // res.json({isOK:false,value:{why:{messageAuthor:"none inPROGRESS"}}});
 });
 
-module.exports = router;
+// module.exports = router;
+function WhatNeedToDo(url,options = {isEmpty:true},req,res){
+  console.log(url,options);
+  if(options.isEmpty){
+    res.write('enter data');
+    res.end();
+  }else{
+    if(url === 'loginUser'){
+      req.on('data',async (chunk)=>{
+        chunk += '';
+        chunk = JSON.parse(chunk);
+        console.log(chunk,typeof chunk);
+        let result = await MongoChanger.findUserByLogin(chunk.nickname,true);
+        console.log(result);
+        if(result.isOK){
+          // no find iuser
+          console.log("no find");
+          res.end(Response.Bad({value:{why:{messageAuthor:'no register account'}}}));
+        }else{
+          let isPass = await MongoChanger.isPasswordAndLoginMatch(result.why.user,chunk.nickname,chunk.password);
+          if(isPass.isOK){
+            console.log("find and pass");
+            if(isAdmin(chunk.nickname).isOK){
+              console.log("find admin");
+              // res.writeHead(200, {
+              //   'Content-Type': 'text/plain;charset=UTF-8',
+              //   "Set-Cookie":`logged=true;SameSite=None;Secure;nickname=${chunk.nickname};SameSite=None;Secure;timeCookies=${timeInMs};SameSite=None;Secure;`,
+              // })
+
+              // res.setHeader("Set-Cookie",`logged=true;`,"Set-Cookie",,"Set-Cookie",`timeCookies=${timeInMs};`);
+              res.writeHead(200,{
+                'Content-Type': 'text/plain;charset=UTF-8',
+                "Set-Cookie":`logged=true;nickname=${chunk.nickname};path='/';timeCookies=${timeInMs};`
+              });
+              // res.write();
+              res.end(Response.Good(isPass));
+            }else{
+              console.log("find user");
+              
+              // .setHeader('Set-Cookie', ['logged=true;SameSite=None;secure;', `nickname=${chunk.nickname};SameSite=None;secure;`,`timeCookies=${timeInMs};SameSite=None;secure;`])
+              // .setHeader('Set-Cookie',['logged="true";',`nickname="${chunk.nickname}";`,`timeCookies="${timeInMs}";`])
+              // res.writeHead(200, {
+              //   'Content-Type': 'text/plain;charset=UTF-8',
+                
+              
+              res.setHeader("Set-Cookie",`logged=true;SameSite=None;Secure;nickname=${chunk.nickname};SameSite=None;Secure;timeCookies=${timeInMs};SameSite=None;Secure;`);
+              res.writeHead(206);
+              res.write(Response.Good(isPass));
+              res.end();
+            }
+    
+          }else{
+            console.log("no match pass");
+            res.writeHead(205, {
+              'Content-Type': 'text/html'
+            })
+            res.write(Response.Bad({why:isPass}));
+            res.end();
+          }
+        }
+      })
+    }
+  }
+
+  
+}
+module.exports = {WhatNeedToDo};
+

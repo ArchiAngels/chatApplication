@@ -5,6 +5,8 @@ module.exports = function BadResponse(passedValue={}){
         output.value = {...passedValue};
 
         console.log(output)
+    
+    output = JSON.stringify(output);
 
     return output;
 }

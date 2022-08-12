@@ -65,9 +65,6 @@ export default function Form(props){
     
         await Send(method, url,values,(xhr)=>{
 
-          // console.warn(xhr);
-
-
           let value,reason,result,parsedResponse,condition;
 
           if(xhr.isOK){
