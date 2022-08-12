@@ -44,6 +44,8 @@ let Name = styled.span`
 
 export default function message(props){
 
+    console.log('message draw');
+
     const { me, msg, who, time} = props;
 
     MessBorder = styled(MessBorder)`

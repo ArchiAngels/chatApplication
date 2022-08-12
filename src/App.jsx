@@ -21,7 +21,7 @@ const Wrapper = styled.section`
 
 
 
-const Chat_container = styled.div`
+const ChatContainer = styled.div`
     width:${w_chat}vw;
     height:${h_chat}vh;
     margin:0vh auto;
@@ -33,7 +33,7 @@ const Chat_container = styled.div`
     overflow:hidden;
 `;
 
-const HistoryOfChat_custom = styled.div`
+const HistoryChat = styled.div`
     width:${w_chat}vw;
     height:${h_chat * 0.9}vh;
     background:#fff;
@@ -60,11 +60,6 @@ export default function App(props) {
     let YourName = props.nickname || 'You';
 
     const {Manager} = props;
-      
-    // WS.on('message', function message(data) {
-    //     console.log('received: %s', data);
-    // });
-
 
     
 
@@ -72,16 +67,14 @@ export default function App(props) {
 
     return <>
         <Wrapper>
-            {/* <Title> */}
-                <Chat_container>
-                    <HistoryOfChat_custom>
-                        {messages.map((e,i)=>{
-                            return <Message who={e.who} msg={e.msg} time={e.time} me={e.me} key={i+'x'}/>
-                        })}
-                    </HistoryOfChat_custom>
-                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
-                </Chat_container>
-            {/* </Title> */}
+            <ChatContainer>
+                <HistoryChat>
+                    {messages.map((e,i)=>{
+                        return <Message who={e.who} msg={e.msg} time={e.time} me={e.me} key={i+'x'}/>
+                    })}
+                </HistoryChat>
+                    <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
+            </ChatContainer>
         </Wrapper>
     </>
 }
