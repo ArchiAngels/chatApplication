@@ -18,16 +18,31 @@ const apiUserTrue = require('./backend/api/apiUser.js');
 
 http.createServer((req,res)=>{
     let url = req.url;
-    console.log(url);
-    if(routing.isApiRoom(url)){
+    // console.log(url);
+    // if(req.url === '/'){
+    //     res.setHeader('Set-Cookie',['mikita=Baran','nikolay=loh']);
+    //     res.writeHead(203);
+    //     console.log(res);
+    //     res.end('SalamOk');
+    // }else{
+    //     res.writeHead(999);
+    //     res.end();
+    // }
 
+    if(routing.isApiRoom(url)){
+        res.end();
     }else if(routing.isApiUser(url)){        
         let match = url.split('/');     
-        apiUserTrue.WhatNeedToDo(match[match.length - 1],{isEmpty:false},req,res);
+        apiUserTrue.WhatNeedToDo(match[match.length - 1],{isEmpty:false},req).then(value=>{
+            console.log(value);
+            res.setHeader('Set-Cookie',[...value.cookies]);
+            res.writeHead(200);
+            res.end(value.output);
+        })
+    }
         // res.write('ididnahui');
         // res.end();
-
-    }else if(routing.isPublicDirectory(url)){
+    else if(routing.isPublicDirectory(url)){
         let file = fs.readFileSync(path.join(__dirname,url));
         res.write(file);
         res.end();
@@ -36,7 +51,9 @@ http.createServer((req,res)=>{
         res.write(html);
         res.end();
     }
-}).listen(5000);
+}).listen({port:5000},()=>{
+    console.log(`\n\n\nserver running\n\n`);
+});
 
 // app.listen(port,()=>{
 //     console.log(`\n\n\n\nServer start localhost:${port}`);

@@ -20,7 +20,6 @@ function isPublicDirectory(url){
 
 function compareResult(url,meta){
     let match = url.slice(0,meta.length);
-    console.log('SUCCES',match,meta,match === meta);
     return match === meta;
 }
 
