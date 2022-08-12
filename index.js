@@ -35,7 +35,9 @@ http.createServer((req,res)=>{
         let match = url.split('/');     
         apiUserTrue.WhatNeedToDo(match[match.length - 1],{isEmpty:false},req).then(value=>{
             console.log(value);
-            res.setHeader('Set-Cookie',[...value.cookies]);
+            let new_cookies = value.cookies.map(e=>{return e+";Path=/"});
+            console.log(new_cookies);
+            res.setHeader('Set-Cookie',new_cookies);
             res.writeHead(200);
             res.end(value.output);
         })
@@ -51,7 +53,8 @@ http.createServer((req,res)=>{
         res.write(html);
         res.end();
     }
-}).listen({port:5000},()=>{
+})
+.listen({port:5000},()=>{
     console.log(`\n\n\nserver running\n\n`);
 });
 
@@ -59,7 +62,7 @@ http.createServer((req,res)=>{
 //     console.log(`\n\n\n\nServer start localhost:${port}`);
 // });
 
-// app.use(server.static(path.join(__dirname,'/client')))
+// app.use(server.static(path.join(__dirname)))
 
 
 
@@ -77,7 +80,7 @@ http.createServer((req,res)=>{
 //     // return res.sendFile(html);
 // })
 
-// app.get('*',(req,res)=>{
+// app.get('/',(req,res)=>{
 //     console.log("CATCHE HER in * ");
 //     let url = req.url;
 //     console.log(url);
