@@ -43,7 +43,8 @@ module.exports = async function(collectionName = 'REQUIRED',newId = -1,forceWrit
             await selectedCollection.updateOne(filter, updateDoc,options,(err,res)=>{
                 stopTimeOut("updateIdConstant");
 
-                if(err) return reject(err.message)
+                if(err) return reject(err.message);
+                console.log(res);
                 console.log(`new id:: ${res} === ${newId}`);
                 resolve(res);
             });

@@ -3,52 +3,44 @@ require("core-js");
 const path = require('path');
 const http = require('http');
 const fs = require('fs');
-
-const apiUser = require('./backend/api/apiUser.js');
-const apiRoom = require('./backend/api/apiRoom.js');
 const socket = require('./backend/socket/_mainSocket.js');
 const routing = require('./backend/api/handlerRouting.js');
 
-// const server = require('express');
-// const app = server();
 const port = process.env.PORT || 3030;
-const clientPath = path.join(__dirname,'index.html');
 
-const apiUserTrue = require('./backend/api/apiUser.js');
+const apiUser = require('./backend/api/apiUser.js');
+const apiRoom = require('./backend/api/apiRoom.js');
 
 http.createServer((req,res)=>{
     let url = req.url;
-    // console.log(url);
-    // if(req.url === '/'){
-    //     res.setHeader('Set-Cookie',['mikita=Baran','nikolay=loh']);
-    //     res.writeHead(203);
-    //     console.log(res);
-    //     res.end('SalamOk');
-    // }else{
-    //     res.writeHead(999);
-    //     res.end();
-    // }
 
     if(routing.isApiRoom(url)){
-        res.end();
+        let apiUrl = url.split('/');     
+            apiUrl = apiUrl[apiUrl.length - 1];
+        apiRoom.WhatNeedToDo(apiUrl,{isEmpty:false},req,res);
     }else if(routing.isApiUser(url)){        
-        let match = url.split('/');     
-        apiUserTrue.WhatNeedToDo(match[match.length - 1],{isEmpty:false},req).then(value=>{
-            console.log(value);
-            let new_cookies = value.cookies.map(e=>{return e+";Path=/"});
-            console.log(new_cookies);
-            res.setHeader('Set-Cookie',new_cookies);
-            res.writeHead(200);
-            res.end(value.output);
-        })
+        let apiUrl = url.split('/');     
+            apiUrl = apiUrl[apiUrl.length - 1];
+        apiUser.WhatNeedToDo(apiUrl,{isEmpty:false},req,res);
     }
-        // res.write('ididnahui');
-        // res.end();
     else if(routing.isPublicDirectory(url)){
         let file = fs.readFileSync(path.join(__dirname,url));
         res.write(file);
         res.end();
-    }else {
+    }else if(routing.isChatRoom(url)){
+        let id = url.split('/');     
+            id = id[id.length - 1];
+        
+            res.setHeader(
+                "Location",'/'
+            );
+            res.setHeader(
+                "Set-Cookie",[`CR=${id};path=/`]
+            );
+            res.writeHead(301);
+            res.end();
+    }
+    else {
         let html = fs.readFileSync(path.join(__dirname,'index.html'));
         res.write(html);
         res.end();
@@ -58,41 +50,4 @@ http.createServer((req,res)=>{
     console.log(`\n\n\nserver running\n\n`);
 });
 
-// app.listen(port,()=>{
-//     console.log(`\n\n\n\nServer start localhost:${port}`);
-// });
-
-// app.use(server.static(path.join(__dirname)))
-
-
-
-// app.get('/chatRoom/:ID',(req,res)=>{
-//     let url = req.url;
-//     console.log(url,req.params.ID);
-//     // if(url === '/'){
-//     //     return res.redirect('/firstContact');
-//     // }
-
-//     // let html = ClientPath;
-//     return res
-//         .cookie('CR',req.params.ID)
-//         .redirect('/')
-//     // return res.sendFile(html);
-// })
-
-// app.get('/',(req,res)=>{
-//     console.log("CATCHE HER in * ");
-//     let url = req.url;
-//     console.log(url);
-//     // if(url === '/'){
-//     //     return res.redirect('/firstContact');
-//     // }
-
-//     let html = clientPath;
-//     return res.sendFile(html);
-// })
-
-// app.use('/apiUser',apiUser);
-// app.use('/apiRoom',apiRoom);
-
-// socket();
+socket();

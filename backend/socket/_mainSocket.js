@@ -18,13 +18,20 @@ module.exports = function socket(){
     myRoom.on('connection',(socket)=>{
         myRoom.socketsJoin('room1');
 
-        console.log(socket.rooms,myRoom.rooms);
+        // console.log(socket.rooms,myRoom.rooms);
 
         socket.on('messageInRomm707',async (data)=>{
             
             let parsed = JSON.parse(data);
-            await saveMessage('publicChatRoom',parsed.msg,parsed.who,parsed.time);
-            myRoom.emit('answerForRoom707',data);
+            console.log(parsed.time,Object.keys(parsed.time));
+            saveMessage('publicChatRoom',parsed.msg,parsed.who,parsed.time).then(value=>{
+                console.log(value);
+                myRoom.emit('answerForRoom707',data);
+            }).catch(err =>{
+                console.log(err);
+                myRoom.emit('answerForRoom707',`${JSON.stringify({err:err})}`);
+            })
+            
 
         })
 

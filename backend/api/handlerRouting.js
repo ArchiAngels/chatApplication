@@ -1,3 +1,8 @@
+function compareResult(url,meta){
+    let match = url.slice(0,meta.length);
+    return match === meta;
+}
+
 function isHomePage(url){
     // let homePageUrls = ['/']
     return url === '/'
@@ -18,10 +23,17 @@ function isPublicDirectory(url){
     return compareResult(url,meta);
 }
 
-function compareResult(url,meta){
-    let match = url.slice(0,meta.length);
-    return match === meta;
+
+function isChatRoom(url){
+    let meta = '/chatRoom';
+    return compareResult(url,meta);
 }
 
 
-module.exports = {isHomePage,isApiRoom,isApiUser,isPublicDirectory};
+module.exports = {
+    isHomePage,
+    isApiRoom,
+    isApiUser,
+    isPublicDirectory,
+    isChatRoom
+};
