@@ -44,7 +44,6 @@ module.exports = async function(collectionName = 'REQUIRED',newId = -1,forceWrit
                 stopTimeOut("updateIdConstant");
 
                 if(err) return reject(err.message);
-                console.log(res);
                 console.log(`new id:: ${res} === ${newId}`);
                 resolve(res);
             });
