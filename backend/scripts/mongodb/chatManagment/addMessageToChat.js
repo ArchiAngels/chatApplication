@@ -31,13 +31,15 @@ module.exports = async function(collectionName = 'REQUIRED',message = '',userNam
 
             const selectedCollection = database.collection(collectionName);  
 
+            let ID = id.body.idusers;
+
             
             const doc = {
           
                 userID: userName,
                 message:message,
                 date:date,
-                id:id
+                id:ID
           
               }
             await selectedCollection.insertOne(doc,async function(err,res){
@@ -56,7 +58,7 @@ module.exports = async function(collectionName = 'REQUIRED',message = '',userNam
 
             });
 
-            await setId(collectionName,++id);
+            await setId(collectionName,++ID);
 
         });
     }

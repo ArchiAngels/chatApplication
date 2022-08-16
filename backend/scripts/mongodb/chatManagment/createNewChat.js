@@ -1,32 +1,24 @@
 const mainMongoodb = require('../mainMongoodb.js');
+const setID = require('../idManagment/updateIdConstant.js');
+const createCollection = require('../collection/createNewCollection.js');
 
-module.exports = async function(){
 
-    console.log('createNewChat:::start creating')    
+module.exports = async function(nameChat){
 
     function passFunction(client,database,resolve,reject,stopTimeOut){
 
         return new Promise(async function(myresolve,myreject){
 
-
-            const chats = database.collection('users');           
-
-            const query = {TYPE:"CONSTANT"};
-            await users.findOne(query,async function(err,res){
-
-                await client.close();
-
-                stopTimeOut("getIdConstant")
-
-                if(err) {
-                    let messageToClient = `Server Database Error`;
-                    
-                    return reject({canSend:messageToClient,detailsError:err.message});
-                } 
-
-                resolve(res);
-
-            });
+            createCollection(nameChat).then(value=>{
+                if(value.isOK){
+                    setID(nameChat,0,true);
+                    resolve('ok');
+                }
+            }).catch(e=>{
+                console.log(`CnC ${e}`);
+                reject(e)
+            })
+            
 
         });
     }

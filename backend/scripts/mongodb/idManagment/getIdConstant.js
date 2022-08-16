@@ -1,12 +1,10 @@
 const mainMongoodb = require('../mainMongoodb.js');
 
-module.exports = async function(collectionName = 'REQUIRED'){
+module.exports = async function getId(collectionName = 'REQUIRED'){
 
     if(collectionName === 'REQUIRED'){
         return Promise.reject('enter collection name');
     }
-
-    console.log('getIdConstant:::start creating')    
 
     function passFunction(client,database,resolve,reject,stopTimeOut){
 
@@ -20,7 +18,7 @@ module.exports = async function(collectionName = 'REQUIRED'){
 
                 await client.close();
 
-                stopTimeOut("getIdConstant")
+                stopTimeOut('getID')
 
                 if(err) {
                     let messageToClient = `Server Database Error`;

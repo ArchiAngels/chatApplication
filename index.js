@@ -5,11 +5,11 @@ const http = require('http');
 const fs = require('fs');
 const socket = require('./backend/socket/_mainSocket.js');
 const routing = require('./backend/api/handlerRouting.js');
+const apiManager = require('./backend/api/_mainApiConstructor.js');
 
 const port = process.env.PORT || 3030;
 
-const apiUser = require('./backend/api/apiUser.js');
-const apiRoom = require('./backend/api/apiRoom.js');
+
 
 http.createServer((req,res)=>{
     let url = req.url;
@@ -17,11 +17,11 @@ http.createServer((req,res)=>{
     if(routing.isApiRoom(url)){
         let apiUrl = url.split('/');     
             apiUrl = apiUrl[apiUrl.length - 1];
-        apiRoom.WhatNeedToDo(apiUrl,{isEmpty:false},req,res);
+        apiManager.automative('/rooms',apiUrl,{isEmpty:false},req,res);
     }else if(routing.isApiUser(url)){        
         let apiUrl = url.split('/');     
             apiUrl = apiUrl[apiUrl.length - 1];
-        apiUser.WhatNeedToDo(apiUrl,{isEmpty:false},req,res);
+        apiManager.automative('/users',apiUrl,{isEmpty:false},req,res);
     }
     else if(routing.isPublicDirectory(url)){
         let file = fs.readFileSync(path.join(__dirname,url));
@@ -46,8 +46,8 @@ http.createServer((req,res)=>{
         res.end();
     }
 })
-.listen({port:5000},()=>{
-    console.log(`\n\n\nserver running\n\n`);
+.listen({port:port},()=>{
+    console.log(`\n\n\nserver running on port:${port}\n\n`);
 });
 
-socket();
+// socket();

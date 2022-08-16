@@ -2,8 +2,6 @@ const mainMongoodb = require('../mainMongoodb.js');
 
 module.exports = async function(collectionName = 'REQUIRED',newId = -1,forceWrite = false){
 
-    console.log('updateIdConstant:::start creating')    
-
     if(newId === -1){
         return Promise.reject('enter id');
     }
@@ -24,7 +22,7 @@ module.exports = async function(collectionName = 'REQUIRED',newId = -1,forceWrit
                 upsert:forceWrite,
             }
 
-            let id = `id${collectionName.split('collection').join('')}`;
+            let id = `id${collectionName}`;
 
             let setValue = {};
                 setValue[id] = newId;
@@ -41,10 +39,9 @@ module.exports = async function(collectionName = 'REQUIRED',newId = -1,forceWrit
             };
 
             await selectedCollection.updateOne(filter, updateDoc,options,(err,res)=>{
-                stopTimeOut("updateIdConstant");
+                stopTimeOut('UpdateID');
 
                 if(err) return reject(err.message);
-                console.log(`new id:: ${res} === ${newId}`);
                 resolve(res);
             });
 

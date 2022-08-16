@@ -66,4 +66,29 @@ function getMethods(path=NOTCHANGEDCONSTANT){
 
 
 }
-module.exports = {apiConstructor,getMethods};
+
+function automative(apiDirectory = NOTCHANGEDCONSTANT,url,options = {isEmpty:true},req,res){
+
+    if(apiDirectory === NOTCHANGEDCONSTANT){
+        throw new Error('api path dir is missing');
+    }
+    const sendResponse = require('../scripts/ServerScripts/AllRespnonsesController.js');
+
+    let apiMethods = getMethods(apiDirectory);
+
+    if(!options.isEmpty){
+        if(url === '' || url === NOTCHANGEDCONSTANT){
+          res.end('Bad url');
+        }
+        else{
+          return apiConstructor(url,apiMethods,req,res).catch(err=>{
+            console.log(err);
+            let text = sendResponse.Bad({why:{message:err}});
+            res.end(text);
+          });
+        }
+      }else{
+        res.end();
+      }  
+}
+module.exports = {apiConstructor,getMethods,automative};

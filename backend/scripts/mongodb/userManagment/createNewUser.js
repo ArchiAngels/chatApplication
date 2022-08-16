@@ -6,8 +6,6 @@ const mainMongoodb = require('../mainMongoodb.js');
 
 module.exports = async function(login,password){
 
-    console.log('CreatenewUser:::start searching')    
-
     function passFunction(client,database,resolve,reject,stopTimeOut){
 
         return new Promise(async function(myresolve,myreject){
@@ -16,6 +14,7 @@ module.exports = async function(login,password){
         
             if(id.isOK){
                 let users = database.collection('users')
+                let ID = id.body.idusers;
 
                 const doc = {
 
@@ -23,22 +22,21 @@ module.exports = async function(login,password){
               
                     password: password,
 
-                    id:id.body.idUser
+                    id:ID
               
-                  }
+                }
+
+                console.log(doc,id);
               
-                  await users.insertOne(doc,{},async (err,res)=>{
-                    stopTimeOut('createUser');
+                await users.insertOne(doc,{},async (err,res)=>{
+                    stopTimeOut('CU');
 
                     if(err) return reject(err)
-
-                    console.log("new user",res);
-                    await setId('users',++id.body.idUser);
+                    await setId('users',++ID);
 
                     resolve(res);
-                    
-                  });
-                // return resolve({TYPE:'free to register',idUser:"free"});
+                
+                });
             }else{
                 return reject({why:'already register',idUser:"busy",value:res});
             }
