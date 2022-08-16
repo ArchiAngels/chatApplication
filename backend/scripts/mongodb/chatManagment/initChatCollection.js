@@ -1,7 +1,7 @@
-const createNewCollection = require('../collection/createNewCollection.js');
+const createChat = require('./createNewChat.js');
 
 module.exports = function(){
     let name = 'publicChatRoom';
 
-    return createNewCollection(name);
+    return createChat(name);
 }

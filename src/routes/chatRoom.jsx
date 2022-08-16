@@ -55,6 +55,7 @@ export default function ChatRoom(props){
 
     if(YourName !== -1 && userList.length === 0){
         socket.emit('getUsersList');
+        socket.emit('getMessages');
     }
 
     

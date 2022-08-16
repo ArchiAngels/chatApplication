@@ -6,9 +6,7 @@ const LINKS = [
     {to:"/yourProfile",name:"me"}
 ];
 
-function handleClick(){
-    console.log('clicked');
-}
+
 
 function GetIndexOfCurrentLink(pathname){
     for(let i =0; i < LINKS.length;i++){
@@ -55,7 +53,15 @@ let LinkNav = styled.span`
 
 
 
-export default function links(){
+export default function links(props){
+
+    const {Manager} = props;
+    const socket = Manager.socket("/707");
+
+
+    function handleClick(){
+        socket.emit('userLeaveRoom');
+    }
     return <>
         <Navigator>
 

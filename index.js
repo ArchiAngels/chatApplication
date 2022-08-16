@@ -35,19 +35,30 @@ http.createServer((req,res)=>{
                 "Location",'/'
             );
             res.setHeader(
-                "Set-Cookie",[`CR=${id};path=/`]
+                "Set-Cookie",[`CR=public;path=/`]
             );
             res.writeHead(301);
             res.end();
     }
     else {
-        let html = fs.readFileSync(path.join(__dirname,'index.html'));
-        res.write(html);
-        res.end();
+        
+        console.log(req.url);
+        if(req.url === '/'){
+            let html = fs.readFileSync(path.join(__dirname,'index.html'));
+            res.end(html);
+        }else{
+            res.setHeader(
+                "Location",'/'
+            );
+            res.writeHead(301);
+            res.end();
+        }
+
+        
     }
 })
 .listen({port:port},()=>{
     console.log(`\n\n\nserver running on port:${port}\n\n`);
 });
 
-// socket();
+socket();

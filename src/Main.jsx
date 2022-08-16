@@ -31,7 +31,7 @@ root.render(
   <>
       <BrowserRouter>
       
-        <Nav/>
+        <Nav Manager={manager}/>
         <CookieChecker/>
 
         <Routes>

@@ -31,7 +31,7 @@ module.exports = async function(collectionName = 'REQUIRED',message = '',userNam
 
             const selectedCollection = database.collection(collectionName);  
 
-            let ID = id.body.idusers;
+            let ID = id.body.idpublicChatRoom;
 
             
             const doc = {

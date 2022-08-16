@@ -61,6 +61,17 @@ export default function App(props) {
 
     const {Manager} = props;
 
+    const socket = Manager.socket('/707');    
+
+    socket.on('messageList',(json)=>{
+        console.log('JSON');
+        json = JSON.parse(json);
+        json.forEach(element => {
+            console.log(element);
+        });
+        console.log()
+    })
+
     
 
     

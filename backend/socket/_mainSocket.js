@@ -1,4 +1,6 @@
 const saveMessage = require('../scripts/mongodb/chatManagment/addMessageToChat.js');
+const onLeave = require('./scripts/leave.js').leavePublicRoom;
+const askMsg = require('./scripts/getMessages.js').getMessage;
 
 module.exports = function socket(){
     const { Server } = require("socket.io");
@@ -53,17 +55,17 @@ module.exports = function socket(){
         })
 
         socket.on('disconnect',(reason)=>{
-            let activeUsers = usersInRoom.filter(e => e.id !== socket.id);
-            usersInRoom = activeUsers;
-            myRoom.emit('freshUserList',usersInRoom);
+            onLeave(usersInRoom,myRoom,socket.id);
+        })
+
+        socket.on('userLeaveRoom',()=>{
+            onLeave(usersInRoom,myRoom,socket.id);
+        })
+
+        socket.on('getMessages',()=>{
+            askMsg(myRoom);
         })
 
 
     });
-
-    // myRoom.on('disconection')
-
-    setInterval(()=>{
-        console.log(usersInRoom,'\n');
-    },1000);
 }

@@ -29,9 +29,9 @@ export default function Nav(props){
     return <>
         <ContentWrap style={{left: isVisible? "0":"-150px"}}>
 
-            <Links/>
+            <Links Manager={props.Manager}/>
 
-            <IconEye initialState={isVisible} changeState={setVisible} style={{top:"0",left:"150px",width:'60px',height:'60px'}} />
+            <IconEye initialState={isVisible} changeState={setVisible} style={{top:"0",left:"150px",width:'40px',height:'40px'}} />
             
         </ContentWrap>
         
