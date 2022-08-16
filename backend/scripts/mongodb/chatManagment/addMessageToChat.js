@@ -16,7 +16,7 @@ module.exports = async function(collectionName = 'REQUIRED',message = '',userNam
         return Problem('enter message');
     }else if(userName === -1){
         return Problem('enter userName');
-    }else if(Object.keys(date).length !== 5){
+    }else if(Object.keys(date).length !== 6){
         return Problem('enter date {hh,mm,dd,mm,yyyy}');
     }
 

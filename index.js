@@ -15,9 +15,32 @@ http.createServer((req,res)=>{
     let url = req.url;
 
     if(routing.isApiRoom(url)){
-        let apiUrl = url.split('/');     
+        let apiUrl = url.split('/');
+        if(url.includes('?')){
+            
+            let parametrs = apiUrl[apiUrl.length-1].split('?');
+            let objParametrs = {};
+
+            apiUrl = parametrs[0]+'';
+
+            parametrs = parametrs[1].split('&');            
+
+            parametrs.map(e=>{
+                let obj = {};
+                    e = e.split('=');
+                    objParametrs[e[0]] = parseInt(e[1]);
+                return obj;
+            });
+
+            apiManager.automative('/rooms',apiUrl,{isEmpty:false,...objParametrs},req,res);
+        }else{
             apiUrl = apiUrl[apiUrl.length - 1];
-        apiManager.automative('/rooms',apiUrl,{isEmpty:false},req,res);
+            apiManager.automative('/rooms',apiUrl,{isEmpty:false},req,res);
+        }
+        
+        
+            // console.log(parametrs,objParametrs);
+    
     }else if(routing.isApiUser(url)){        
         let apiUrl = url.split('/');     
             apiUrl = apiUrl[apiUrl.length - 1];

@@ -9,7 +9,8 @@ import Chat from '../App.jsx';
 import EXIT from '../components/other/exit.jsx';
 
 import CheckCookies from '../scripts/checkCookies.js';
-// import checkUserCookies from '../scripts/checkUserHaveSomeCookies.js';
+
+const getMessageList = require('../scripts/getMessages.js');
 
 
 let InfoAboutChatRoomContainer = styled.div`
@@ -44,8 +45,11 @@ let UserContainer = styled.div`
 
 export default function ChatRoom(props){
 
+    console.log('chatroom drawed');
+
     let [user,setUser] = React.useState(3);
     let [userList,setUserList] = React.useState([]);
+    let [listMessages,setlistMessages] = React.useState(false);
     const {Manager} = props;
 
     let socket = Manager.socket('/707');
@@ -53,9 +57,23 @@ export default function ChatRoom(props){
     let YourName = user.nickname || -1;
     let userExistOnList = -2;
 
+    function getHistory(howMuch = 0,skip = 0){
+        let result = getMessageList('GET',`../apiRoom/getMessages?limit=${howMuch}&skip=${skip}`).then(v=>{
+            // console.log(v);
+            v = JSON.parse(v.value);
+            v = v.sort((a,b)=> a.time.ms - b.time.ms);
+            console.log(v);
+            return v || [];
+        }).catch(e=>{
+            // console.log(e)
+        })
+
+        return result;
+    }
+
     if(YourName !== -1 && userList.length === 0){
         socket.emit('getUsersList');
-        socket.emit('getMessages');
+        // socket.emit('getMessages');
     }
 
     
@@ -67,7 +85,7 @@ export default function ChatRoom(props){
             return e.name;
         })
 
-        console.log(userList,userExistOnList,YourName);
+        // console.log(userList,userExistOnList,YourName);
 
         if(userExistOnList.length === 0 && YourName !== -1){
             socket.emit('userConnected',YourName);
@@ -93,6 +111,14 @@ export default function ChatRoom(props){
                 let cookies = CheckCookies();
                 if(cookies.isOK){
                     setUser(cookies.value);
+                    getData();
+                    async function getData(){
+                        let result = await getHistory(5,0);
+                        // console.log(result);
+                        setlistMessages(result);
+                    }
+
+                    
                 }else{
                     setTimeout(()=>{
                         user -= 1;
@@ -113,16 +139,15 @@ export default function ChatRoom(props){
             <p>Current room </p>
             <p>ID :: {id}</p>
 
-            {}
 
-                <UserContainer>
-                    {userList.map( e =>{
-                        return <p key={e}>{e}</p>
-                    })}
-                </UserContainer>
+            <UserContainer>
+                {userList.map( e =>{
+                    return <p key={e}>{e}</p>
+                })}
+            </UserContainer>
 
         </InfoAboutChatRoomContainer>
 
-        <Chat nickname={user.nickname} Manager={Manager}/>
+       {listMessages === false? '':  <Chat nickname={user.nickname} Manager={Manager} message={listMessages} ifOnTop={getHistory}/>}
     </>
 }

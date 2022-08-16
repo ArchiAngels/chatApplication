@@ -1,13 +1,17 @@
-const getCollection = require('../../scripts/mongodb/collection/getCollection.js');
+const getMessagePublicRoom = require('../../socket/scripts/getMessages.js').getMessage;
 
-function getMessages(req,res){
-    let collection = 'publicChatRoom'
-    getCollection(collection).then(messages=>{
-        messages = JSON.stringify(messages);
-        res.end(messages)
-    }).catch(e=>{
-        res.end(e);
-    })
+async function getMessages(options,req,res){
+
+    const {limit,skip} = options;
+
+    return getMessagePublicRoom(limit,skip).then(e=>{
+        e = JSON.stringify(e);   
+        // console.log(e);
+        return res.end(e);
+    });
+
+    
+
 }
 
 module.exports = {getMessages};

@@ -53,24 +53,24 @@ const HistoryChat = styled.div`
 
 `;
 
+const GetMoreMessages = styled.div`
+    width:50px;
+    height:50px;
+    background-color:#000;
+    position:absolute;
+`;
+
 export default function App(props) {
 
-    let [messages,setMessages] = React.useState([])
+    console.log('app drawed')
+
+    
+    let [messages,setMessages] = React.useState(props.message || []);
+    let [offset,setOffset] = React.useState([5,0]);
 
     let YourName = props.nickname || 'You';
 
-    const {Manager} = props;
-
-    const socket = Manager.socket('/707');    
-
-    socket.on('messageList',(json)=>{
-        console.log('JSON');
-        json = JSON.parse(json);
-        json.forEach(element => {
-            console.log(element);
-        });
-        console.log()
-    })
+    const {Manager,ifOnTop} = props;
 
     
 
@@ -79,9 +79,22 @@ export default function App(props) {
     return <>
         <Wrapper>
             <ChatContainer>
+            <GetMoreMessages onClick={async ()=>{
+                offset[0] += 5;
+                offset[1] += 5;
+                let result = await ifOnTop(offset[0],offset[1]);
+                // console.log("result");
+                // console.log(result);
+                let newMessages = [...messages,...result];
+                    newMessages.sort((a,b)=> a.time.ms - b.time.ms)
+                setMessages(newMessages);
+                setOffset(offset);
+            }}>
+                <p>load oldest message</p>
+            </GetMoreMessages>
                 <HistoryChat>
                     {messages.map((e,i)=>{
-                        return <Message who={e.who} msg={e.msg} time={e.time} me={e.me} key={i+'x'}/>
+                        return <Message who={e.who} msg={e.msg} time={e.time} me={YourName} key={i+'x'}/>
                     })}
                 </HistoryChat>
                     <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>

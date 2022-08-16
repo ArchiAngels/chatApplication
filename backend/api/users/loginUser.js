@@ -6,7 +6,7 @@ const sendResponseWithCookies = require('../../scripts/ServerScripts/sendRespons
 console.log(sendResponseWithCookies);
 let timeInMs = 30 * 60 * 1000;
 
-function loginUser(req,res){
+function loginUser(options ={},req,res){
     let responseText,Cookies;
     req.on('data',async (data)=>{
   

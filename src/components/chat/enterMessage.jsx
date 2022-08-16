@@ -42,7 +42,7 @@ export default function enterMessage(props){
 
     socket.on('answerForRoom707',(message)=>{
 
-        console.log(message);
+        // console.log(message);
         message = JSON.parse(message);
         
         let newMessage = [];
@@ -66,13 +66,13 @@ export default function enterMessage(props){
             // console.log(msg);
             let newMessage = createObjMessage(msg,YourName,true);           
 
-            console.log(newMessage.time,Object.keys(newMessage.time));
+            // console.log(newMessage.time,Object.keys(newMessage.time));
 
             setMessages([...messages,newMessage]);
 
             newMessage = JSON.stringify(newMessage);
 
-            console.log(newMessage);
+            // console.log(newMessage);
 
             socket.emit("messageInRomm707", newMessage);
             e.target.value = '';
@@ -92,6 +92,7 @@ export default function enterMessage(props){
                 day:curentTime.getUTCDate(),
                 month:curentTime.getMonth(),
                 year:curentTime.getFullYear(),
+                ms:curentTime.getTime(),
             },
             me:me,
         }

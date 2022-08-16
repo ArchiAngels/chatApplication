@@ -3,7 +3,7 @@ const Response = require('../../scripts/ServerScripts/AllRespnonsesController.js
 const isAdmin = require('../../scripts/ServerScripts/isAdmin.js');
 
 
-function createPublic(req,res){
+function createPublic(options={},req,res){
     return MongoChanger.initPublicChatCollection().then(value=>{
         res.end(Response.Good({message:"created"}));
     }).catch(reason=>{

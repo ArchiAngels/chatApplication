@@ -4,7 +4,7 @@ const sendResponseWithCookies = require('../../scripts/ServerScripts/sendRespons
 
 let timeInMs = 30 * 60 * 1000;
 
-function createNewUser(req,res){
+function createNewUser(options={},req,res){
     let responseText,Cookies;
   
     req.on('data',async (chunk)=>{

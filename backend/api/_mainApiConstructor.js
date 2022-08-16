@@ -1,7 +1,7 @@
 const NOTCHANGEDCONSTANT = 'apiUrl';
 
 
-function apiConstructor(url = NOTCHANGEDCONSTANT,api=[NOTCHANGEDCONSTANT],req = NOTCHANGEDCONSTANT,res = NOTCHANGEDCONSTANT){
+function apiConstructor(url = NOTCHANGEDCONSTANT,api=[NOTCHANGEDCONSTANT],options,req = NOTCHANGEDCONSTANT,res = NOTCHANGEDCONSTANT){
 
     if(url === NOTCHANGEDCONSTANT){
         return Promise.reject('your passed bad api_-url');
@@ -28,11 +28,18 @@ function apiConstructor(url = NOTCHANGEDCONSTANT,api=[NOTCHANGEDCONSTANT],req = 
         }
 
         let thisApi = api.value.filter(e => e.name === url)[0];
-        thisApi.exe(req,res);
-        clearTimeOut();
-        resolve('succesfully sent');
+        resolve({exe:thisApi,time:clearTimeOut});
+        
 
-    })   
+    }).then(v => {
+        v.time();
+        v.exe.exe(options,req,res);
+
+        return {isOK:true}
+    }).catch(e=>{
+        res.end(e);
+        return {isOK:false,err:e}
+    })
 
 }
 
@@ -52,9 +59,9 @@ function getMethods(path=NOTCHANGEDCONSTANT){
 
             resultDir.push({
                 name:dir[i].split('.')[0],
-                exe:function(req,res){
+                exe:function(options,req,res){
                     let method = require(`${way}/${dir[i]}`)[this.name];
-                    return method(req,res);
+                    return method(options,req,res);
                 }
             })
         }
@@ -81,14 +88,10 @@ function automative(apiDirectory = NOTCHANGEDCONSTANT,url,options = {isEmpty:tru
           res.end('Bad url');
         }
         else{
-          return apiConstructor(url,apiMethods,req,res).catch(err=>{
-            console.log(err);
-            let text = sendResponse.Bad({why:{message:err}});
-            res.end(text);
-          });
+          return apiConstructor(url,apiMethods,options,req,res);
         }
       }else{
-        res.end();
+        res.end('bad');
       }  
 }
 module.exports = {apiConstructor,getMethods,automative};

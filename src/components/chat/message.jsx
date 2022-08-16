@@ -44,13 +44,15 @@ let Name = styled.span`
 
 export default function message(props){
 
-    console.log('message draw');
+    // console.log('message draw');
 
-    const { me, msg, who, time} = props;
+    const { msg, who, time,me} = props;
+
+    // console.log(who,me);
 
     MessBorder = styled(MessBorder)`
-        margin-left:${me ? 'auto' : '0px'};
-        background:${me ? 'lightcoral' : 'lavender'};
+        margin-left:${who === me ? 'auto' : '0px'};
+        background:${who === me ? 'lightcoral' : 'lavender'};
     `;
 
     function timeLessThatTen(num){
