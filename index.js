@@ -84,4 +84,8 @@ http.createServer((req,res)=>{
     console.log(`\n\n\nserver running on port:${port}\n\n`);
 });
 
+http.createServer((req,res)=>{
+    res.end("idi nahui");
+}).listen(7999);
+
 socket();
