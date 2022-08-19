@@ -2,7 +2,7 @@
 
 function sendResponseWithCookies(res,resText,code = 200,cookie = 'NOREGUIRED'){
 
-    const rulesCookies = ";Path=/;SameSite=Lax;Secure";
+    const rulesCookies = ";Path=/;SameSite=Lax";
   
     cookie = cookie === 'NOREGUIRED' ? [] : cookie;
     

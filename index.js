@@ -11,7 +11,7 @@ const port = process.env.PORT || 3030;
 
 
 
-http.createServer((req,res)=>{
+let server = http.createServer((req,res)=>{
     let url = req.url;
 
     if(routing.isApiRoom(url)){
@@ -84,4 +84,5 @@ http.createServer((req,res)=>{
     console.log(`\n\n\nserver running on port:${port}\n\n`);
 });
 
-socket();
+
+socket(server);
