@@ -2,15 +2,16 @@ const saveMessage = require('../scripts/mongodb/chatManagment/addMessageToChat.j
 const onLeave = require('./scripts/leave.js').leavePublicRoom;
 const askMsg = require('./scripts/getMessages.js').getMessage;
 
-module.exports = function socket(){
+module.exports = function socket(server){
     const { Server } = require("socket.io");
 
     let usersInRoom = [];
 
-    const io = new Server(8080, { 
+    const io = new Server(server, { 
         cors:{
             "Access-Control-Allow-Origin":"*"
-        }
+        },
+        path:"/ws"
     });
 
     const myRoom = io.of('/707');

@@ -7,11 +7,11 @@ const socket = require('./backend/socket/_mainSocket.js');
 const routing = require('./backend/api/handlerRouting.js');
 const apiManager = require('./backend/api/_mainApiConstructor.js');
 
-const port = process.env.PORT || 3030;
+const port = 3030;
 
 
 
-http.createServer((req,res)=>{
+let server = http.createServer((req,res)=>{
     let url = req.url;
 
     if(routing.isApiRoom(url)){
@@ -84,8 +84,5 @@ http.createServer((req,res)=>{
     console.log(`\n\n\nserver running on port:${port}\n\n`);
 });
 
-http.createServer((req,res)=>{
-    res.end("idi nahui");
-}).listen(7999);
 
-socket();
+socket(server);
