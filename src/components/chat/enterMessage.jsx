@@ -53,7 +53,6 @@ export default function enterMessage(props){
 
             newMessage.push(tempArr);
         }
-
         setMessages([...messages, ...newMessage]);
 
         

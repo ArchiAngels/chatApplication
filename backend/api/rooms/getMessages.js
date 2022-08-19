@@ -4,7 +4,7 @@ async function getMessages(options,req,res){
 
     const {limit,skip} = options;
 
-    return getMessagePublicRoom(limit,skip).then(e=>{
+    return getMessagePublicRoom(5,skip).then(e=>{
         e = JSON.stringify(e);   
         // console.log(e);
         return res.end(e);

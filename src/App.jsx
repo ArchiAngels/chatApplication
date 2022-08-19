@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Message from './components/chat/message.jsx';
 import EnterMessage from './components/chat/enterMessage.jsx';
+import {PopUp,swap} from './components/chat/popUp.jsx';
 
 
 
@@ -53,12 +54,6 @@ const HistoryChat = styled.div`
 
 `;
 
-const GetMoreMessages = styled.div`
-    width:50px;
-    height:50px;
-    background-color:#000;
-    position:absolute;
-`;
 
 export default function App(props) {
 
@@ -67,10 +62,68 @@ export default function App(props) {
     
     let [messages,setMessages] = React.useState(props.message || []);
     let [offset,setOffset] = React.useState([5,0]);
+    let histroyMessRef = React.useRef(null);
+    let downLoadMess = React.createRef();
+    let newMessage = React.createRef();
 
     let YourName = props.nickname || 'You';
+    let loading = false;
 
     const {Manager,ifOnTop} = props;
+
+
+    React.useEffect(()=>{
+
+        if(offset[0] === 5){
+            histroyMessRef.current.scrollBy(0,histroyMessRef.current.offsetHeight);
+        }
+        // swap(loading);
+        swap(downLoadMess,loading,'0%','-100%');
+        swap(newMessage,false,'100%','-100%')
+        if(histroyMessRef.current.scrollTop >= histroyMessRef.current.scrollTopMax -20){
+            hideNewMess();
+        }
+        // swapDownLoadmess();
+        
+    })
+
+    function hideNewMess(){
+        setTimeout(()=>{
+            swap(newMessage,true,'100%','-100%')
+        },500)
+    }
+
+
+    function handleScroll(e){
+        let offsetTop = e.target.scrollTop;
+        let maxOffset = e.target.scrollTopMax;
+        // console.log(offsetTop);
+
+        if(offsetTop === 0 && !loading){
+            loadAndPasteOldestMessages();
+            loading = true;
+            // swapDownLoadmess();
+            swap(downLoadMess,loading,'0%','-100%');
+        }
+
+        if(offsetTop >= maxOffset - 20){
+            hideNewMess();
+        }
+
+    }
+
+    
+
+    async function loadAndPasteOldestMessages(){
+        console.log('Load old mes');
+        offset[0] += 5;
+        offset[1] += 5;
+        let result = await ifOnTop(offset[0],offset[1]);
+        let newMessages = [...messages,...result];
+            newMessages.sort((a,b)=> a.time.ms - b.time.ms)
+        setMessages(newMessages);
+        setOffset(offset);
+    }
 
     
 
@@ -79,27 +132,20 @@ export default function App(props) {
     return <>
         <Wrapper>
             <ChatContainer>
-            <GetMoreMessages onClick={async ()=>{
-                offset[0] += 5;
-                offset[1] += 5;
-                let result = await ifOnTop(offset[0],offset[1]);
-                // console.log("result");
-                // console.log(result);
-                let newMessages = [...messages,...result];
-                    newMessages.sort((a,b)=> a.time.ms - b.time.ms)
-                setMessages(newMessages);
-                setOffset(offset);
-            }}>
-                <p>load oldest message</p>
-            </GetMoreMessages>
-                <HistoryChat>
+                <PopUp text={'load oldest messages'} ref={downLoadMess}/>
+
+                <HistoryChat onScroll={handleScroll} ref={histroyMessRef}>
                     {messages.map((e,i)=>{
                         return <Message who={e.who} msg={e.msg} time={e.time} me={YourName} key={i+'x'}/>
                     })}
                 </HistoryChat>
-                    <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
+
+                <PopUp text={'you have new message'} ref={newMessage}/>
+
+                <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
             </ChatContainer>
         </Wrapper>
+        
     </>
 }
   
