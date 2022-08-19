@@ -6,7 +6,7 @@ module.exports = function socket(){
     const {createServer} = require('https');
     const { Server } = require("socket.io");
 
-    let httpsServer = createServer().listen(8080);
+    let httpsServer = createServer();
 
     let usersInRoom = [];
 
@@ -71,4 +71,6 @@ module.exports = function socket(){
 
 
     });
+
+    httpsServer.listen(8080);
 }
