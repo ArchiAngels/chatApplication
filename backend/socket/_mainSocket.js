@@ -13,7 +13,8 @@ module.exports = function socket(){
     const io = new Server(httpsServer, { 
         cors:{
             "Access-Control-Allow-Origin":"*"
-        }
+        },
+        path:'/test'
     });
 
     const myRoom = io.of('/707');
