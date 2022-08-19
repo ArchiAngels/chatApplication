@@ -21,7 +21,10 @@ import { Manager } from 'socket.io-client';
 
 let host = 'swetty.herokuapp.com';
 // let host = 'localhost'
-const manager = new Manager(`wss://${host}`);
+let port = '8080';
+const manager = new Manager(`wss://${host}:${port}`,{
+  path:'/test'
+});
 
 
 
