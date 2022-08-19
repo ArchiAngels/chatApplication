@@ -21,8 +21,8 @@ import { Manager } from 'socket.io-client';
 
 let host = 'swetty.herokuapp.com';
 // let host = 'localhost'
-let port = '8080';
-const manager = new Manager(`ws://${host}:${port}`,{
+// let port = '8080';
+const manager = new Manager(`ws://${host}`,{
   path:'/test'
 });
 
