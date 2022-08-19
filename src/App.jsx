@@ -89,7 +89,7 @@ export default function App(props) {
 
     function hideNewMess(){
         setTimeout(()=>{
-            swap(newMessage,true,'100%','-100%')
+            swap(newMessage,true,'200%','-100%')
         },500)
     }
 
