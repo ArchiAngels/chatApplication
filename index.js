@@ -7,7 +7,7 @@ const socket = require('./backend/socket/_mainSocket.js');
 const routing = require('./backend/api/handlerRouting.js');
 const apiManager = require('./backend/api/_mainApiConstructor.js');
 
-const port = 3030;
+const port = process.env.PORT || 3030;
 
 
 
