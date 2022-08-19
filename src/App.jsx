@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Message from './components/chat/message.jsx';
 import EnterMessage from './components/chat/enterMessage.jsx';
+import {PopUp,swap} from './components/chat/popUp.jsx';
 
 
 
@@ -21,7 +22,7 @@ const Wrapper = styled.section`
 
 
 
-const Chat_container = styled.div`
+const ChatContainer = styled.div`
     width:${w_chat}vw;
     height:${h_chat}vh;
     margin:0vh auto;
@@ -33,18 +34,18 @@ const Chat_container = styled.div`
     overflow:hidden;
 `;
 
-const HistoryOfChat_custom = styled.div`
+const HistoryChat = styled.div`
     width:${w_chat}vw;
     height:${h_chat * 0.9}vh;
     background:#fff;
     overflow-y:scroll;
 
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    // -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    // scrollbar-width: none;  /* Firefox */
 
-    &::-webkit-scrollbar { 
-        display: none;  /* Safari and Chrome */
-    }
+    // &::-webkit-scrollbar { 
+    //     display: none;  /* Safari and Chrome */
+    // }
 
     & > div{
         margin:30px;
@@ -53,18 +54,76 @@ const HistoryOfChat_custom = styled.div`
 
 `;
 
+
 export default function App(props) {
 
-    let [messages,setMessages] = React.useState([])
+    console.log('app drawed')
+
+    
+    let [messages,setMessages] = React.useState(props.message || []);
+    let [offset,setOffset] = React.useState([5,0]);
+    let histroyMessRef = React.useRef(null);
+    let downLoadMess = React.createRef();
+    let newMessage = React.createRef();
 
     let YourName = props.nickname || 'You';
+    let loading = false;
 
-    const {socket} = props;
-      
-    // WS.on('message', function message(data) {
-    //     console.log('received: %s', data);
-    // });
+    const {Manager,ifOnTop} = props;
 
+
+    React.useEffect(()=>{
+
+        if(offset[0] === 5){
+            histroyMessRef.current.scrollBy(0,histroyMessRef.current.offsetHeight);
+        }
+        // swap(loading);
+        swap(downLoadMess,loading,'0%','-100%');
+        swap(newMessage,false,'100%','-100%')
+        if(histroyMessRef.current.scrollTop >= histroyMessRef.current.scrollTopMax -20){
+            hideNewMess();
+        }
+        // swapDownLoadmess();
+        
+    })
+
+    function hideNewMess(){
+        setTimeout(()=>{
+            swap(newMessage,true,'100%','-100%')
+        },500)
+    }
+
+
+    function handleScroll(e){
+        let offsetTop = e.target.scrollTop;
+        let maxOffset = e.target.scrollTopMax;
+        // console.log(offsetTop);
+
+        if(offsetTop === 0 && !loading){
+            loadAndPasteOldestMessages();
+            loading = true;
+            // swapDownLoadmess();
+            swap(downLoadMess,loading,'0%','-100%');
+        }
+
+        if(offsetTop >= maxOffset - 20){
+            hideNewMess();
+        }
+
+    }
+
+    
+
+    async function loadAndPasteOldestMessages(){
+        console.log('Load old mes');
+        offset[0] += 5;
+        offset[1] += 5;
+        let result = await ifOnTop(offset[0],offset[1]);
+        let newMessages = [...messages,...result];
+            newMessages.sort((a,b)=> a.time.ms - b.time.ms)
+        setMessages(newMessages);
+        setOffset(offset);
+    }
 
     
 
@@ -72,17 +131,21 @@ export default function App(props) {
 
     return <>
         <Wrapper>
-            {/* <Title> */}
-                <Chat_container>
-                    <HistoryOfChat_custom>
-                        {messages.map((e,i)=>{
-                            return <Message who={e.who} msg={e.msg} time={e.time} myself={e.myself} key={i+'x'}/>
-                        })}
-                    </HistoryOfChat_custom>
-                        <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} socket={socket}/>
-                </Chat_container>
-            {/* </Title> */}
+            <ChatContainer>
+                <PopUp text={'load oldest messages'} ref={downLoadMess}/>
+
+                <HistoryChat onScroll={handleScroll} ref={histroyMessRef}>
+                    {messages.map((e,i)=>{
+                        return <Message who={e.who} msg={e.msg} time={e.time} me={YourName} key={i+'x'}/>
+                    })}
+                </HistoryChat>
+
+                <PopUp text={'you have new message'} ref={newMessage}/>
+
+                <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
+            </ChatContainer>
         </Wrapper>
+        
     </>
 }
   

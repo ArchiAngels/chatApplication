@@ -19,11 +19,6 @@ let colorError = 'lightcoral';
 let colorNeutral = 'gold';
 
 export default function AlertMessage(props){
-
-    
-
-    // console.log(`DRAW MESSAGE with props::`);
-    // console.log(props.el);
     
     let {text,isOK,timeExpire,ID,isDeleted,tickUpdateMessage} = props.el;
     let i = props.index;
@@ -31,7 +26,6 @@ export default function AlertMessage(props){
 
     let ifSomeVaraiblesIsNotWrited = isOK === undefined  || ID === undefined || isDeleted === undefined;
     if(ifSomeVaraiblesIsNotWrited){
-        // console.log(`isOK::${isOK}\n ID::${ID}n isDeleted::${isDeleted}`);
         return props.tryUpdateIfNoStaticVariables(i,{
             isOK:isOK,
             ID:ID,
@@ -42,10 +36,7 @@ export default function AlertMessage(props){
     
 
     let now = Date.now();
-
-    // console.log(text,isOK,timeExpire,timeExpire - now);
-
-    // let [timeFocused,setTimeFocused] = React.useState(0);
+    
     let [isDeletedState,setDeleteState] = React.useState(false);    
     let [time,setTime] = React.useState(timeExpire);
 

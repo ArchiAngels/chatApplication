@@ -1,68 +1,87 @@
 require('dotenv').config();
 require("core-js");
-const PATH = require('path');
-const apiUser = require('./backend/api/apiUser.js');
-const apiRoom = require('./backend/api/apiRoom.js');
+const path = require('path');
+const http = require('http');
+const fs = require('fs');
+const socket = require('./backend/socket/_mainSocket.js');
+const routing = require('./backend/api/handlerRouting.js');
+const apiManager = require('./backend/api/_mainApiConstructor.js');
 
-const MongoChanger = require('./backend/scripts/mongodb/allMongoControllers.js');
-// const WebSocket = require('./backend/scripts/websocket/websocket.js');
-
-const server = require('express');
-const app = server();
 const port = process.env.PORT || 3030;
-const ClientPath = PATH.join(__dirname,'index.html');
 
-app.listen(port,()=>{
-    console.log(`\n\n\n\nServer start localhost:${port}`);
-});
 
-app.use(server.static(PATH.join(__dirname,'/client')))
 
-app.use('/apiUser',apiUser);
-app.use('/apiRoom',apiRoom);
-
-app.get('/chatRoom/:ID',(req,res)=>{
+http.createServer((req,res)=>{
     let url = req.url;
-    console.log(url,req.params.ID);
-    // if(url === '/'){
-    //     return res.redirect('/firstContact');
-    // }
 
-    // let html = ClientPath;
-    return res
-        .cookie('CR',req.params.ID)
-        .redirect('/')
-    // return res.sendFile(html);
-})
+    if(routing.isApiRoom(url)){
+        let apiUrl = url.split('/');
+        if(url.includes('?')){
+            
+            let parametrs = apiUrl[apiUrl.length-1].split('?');
+            let objParametrs = {};
 
-app.get('*',(req,res)=>{
-    let url = req.url;
-    console.log(url);
-    // if(url === '/'){
-    //     return res.redirect('/firstContact');
-    // }
+            apiUrl = parametrs[0]+'';
 
-    let html = ClientPath;
-    return res.sendFile(html);
-})
+            parametrs = parametrs[1].split('&');            
 
+            parametrs.map(e=>{
+                let obj = {};
+                    e = e.split('=');
+                    objParametrs[e[0]] = parseInt(e[1]);
+                return obj;
+            });
 
-const { Server } = require("socket.io");
-
-const io = new Server(8080, { 
-    cors:{
-        "Access-Control-Allow-Origin":"*"
+            apiManager.automative('/rooms',apiUrl,{isEmpty:false,...objParametrs},req,res);
+        }else{
+            apiUrl = apiUrl[apiUrl.length - 1];
+            apiManager.automative('/rooms',apiUrl,{isEmpty:false},req,res);
+        }
+        
+        
+            // console.log(parametrs,objParametrs);
+    
+    }else if(routing.isApiUser(url)){        
+        let apiUrl = url.split('/');     
+            apiUrl = apiUrl[apiUrl.length - 1];
+        apiManager.automative('/users',apiUrl,{isEmpty:false},req,res);
     }
+    else if(routing.isPublicDirectory(url)){
+        let file = fs.readFileSync(path.join(__dirname,url));
+        res.write(file);
+        res.end();
+    }else if(routing.isChatRoom(url)){
+        let id = url.split('/');     
+            id = id[id.length - 1];
+        
+            res.setHeader(
+                "Location",'/'
+            );
+            res.setHeader(
+                "Set-Cookie",[`CR=public;path=/`]
+            );
+            res.writeHead(301);
+            res.end();
+    }
+    else {
+        
+        console.log(req.url);
+        if(req.url === '/'){
+            let html = fs.readFileSync(path.join(__dirname,'index.html'));
+            res.end(html);
+        }else{
+            res.setHeader(
+                "Location",'/'
+            );
+            res.writeHead(301);
+            res.end();
+        }
+
+        
+    }
+})
+.listen({port:port},()=>{
+    console.log(`\n\n\nserver running on port:${port}\n\n`);
 });
 
-io.on("connection", (socket) => {
-
-    socket.on('1234',(arg)=>{
-        console.log(arg);
-    })
-
-    setInterval(()=>{
-        socket.emit('1234','5678')
-    },2000)
-  // ...
-});
+socket();

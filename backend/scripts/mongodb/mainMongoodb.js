@@ -35,12 +35,9 @@ module.exports = function(fn){
         return run().catch(console.dir);
     }).then(
         function(value){
-            // console.log("OK GOOD");
             return {isOK:true,body:value};
         },
-        function(error){
-            // console.log("BAD something goes wrong");
-            // console.log(error.detailsError);
+        function(error){;
             return {isOK:false,why:error};
         }
     )

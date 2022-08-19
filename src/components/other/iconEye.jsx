@@ -26,11 +26,13 @@ export default function IconChanger(props){
 
     let [isVisible,setVisible] = React.useState(props.initialState ?? true);
 
+    function HandleClick(){
+        setVisible(!isVisible);
+        props.changeState(!isVisible);
+    }
+
     return <>
-        <WrapIcon onClick = {()=>{
-                setVisible(!isVisible);
-                props.changeState(!isVisible);
-        }} style={{...props.style}}>
+        <WrapIcon onClick = {HandleClick} style={{...props.style}}>
             <img alt="eye icon" src={isVisible ? DefaultEyeHidden : DefaultEyeShowed}/>
         </WrapIcon>
         

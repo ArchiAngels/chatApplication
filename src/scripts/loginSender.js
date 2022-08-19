@@ -6,6 +6,8 @@ export default function(method,url,value,callback){
     },5000)
     let xhr = new XMLHttpRequest();
         xhr.open(method,url);
+        xhr.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
+
         xhr.send(body);
         xhr.onload = ()=>{
           clearTimeout(TimeUp);

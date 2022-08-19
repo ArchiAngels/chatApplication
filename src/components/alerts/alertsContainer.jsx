@@ -67,8 +67,6 @@ export default function AlertsContainer(props){
             props.setMessages([...props.messages,UpdateExistedMessage]);
             
         },1)
-        // console.log(props.messages);
-        // isOK:isOK,isDeleted:false,ID:newId
     }
 
 

@@ -4,5 +4,7 @@ module.exports = function GoodResponse(passedValue = {}){
 
         output.value.body = {...passedValue};
 
+        output = JSON.stringify(output);
+
     return output;
 }

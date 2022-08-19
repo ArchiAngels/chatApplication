@@ -7,5 +7,7 @@ module.exports = {
     setIdConstant: require('./idManagment/updateIdConstant.js'),
     createNewUser : require('./userManagment/createNewUser.js'),
     findUserByLogin : require('./userManagment/findUserByLogin.js'),
-    isPasswordAndLoginMatch : require('./userManagment/VerifyLoginUser.js')
+    isPasswordAndLoginMatch : require('./userManagment/VerifyLoginUser.js'),
+
+    initPublicChatCollection:require('./chatManagment/initChatCollection.js')
 }

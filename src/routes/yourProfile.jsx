@@ -13,11 +13,16 @@ import AdminPanel from '../components/admin/admin.jsx';
 
 import TEST from '../../client/assets/avatar.jpeg';
 
+let userSize = {
+    weight:150,
+    height:150
+}
+
 let ContentWrapper = styled.div`
     width:70vw;
     height:70vh;
     display:flex;
-    justify-content:center;
+    justify-content:space-evenly;
     // background-color:#00000070;
     position:relavtive;
     margin-left:15vw;
@@ -25,28 +30,29 @@ let ContentWrapper = styled.div`
 `;
 
 let ContentPart = styled.div`
-    width:50%;
+    width:49%;
     height:100%;
     // background-color:#ffffff30;
     position:relative;
-    padding:0 1rem;
+    padding:1rem;
 `;
 
 let AvatarWrap = styled.div`
+    position:relative;
     &::after{
         
-        width:200px;
-        height:200px;
-        top:1rem;
-        left:calc(50% - 100px);
+        width:${userSize.weight}px;
+        height:${userSize.height}px;
+        top:0;
         z-index:5;
         border-radius:50%;
-        position:absolute;
         text-align:center;
         color:#fff;
         box-sizing:border-box;
         padding-top:100px;
         transition:background-color 0.15s;
+        left:calc(50% - ${userSize.weight*0.5}px);
+        position:absolute;
     }
     &:hover{
         cursor:pointer;
@@ -61,19 +67,15 @@ let AvatarWrap = styled.div`
 let AvatarUser = styled.img`
     background-color:#000;
     border-radius:50%;
-    width:200px;
-    height:200px;
+    width:${userSize.weight}px;
+    height:${userSize.height}px;
     display:block;
-    margin-left:calc(50% - 100px);   
+    margin:auto;
 `;
 
 let UserWrap = styled.div`
     width:100%;
-    background-color:#f8c2c287;
     text-align:center;
-    padding:1rem;
-    
-    border-radius: 1rem;
 `;
 
 let Paragraph = styled.p`
@@ -96,11 +98,14 @@ let Button = styled.p`
 
 `;
 
+
+
+
 export default function yourProfile(props){
 
     let [user,setUser] = React.useState({isOK:false});
     let [isModalVisible,setModalVisible] = React.useState(false);
-    let randomRoom = parseInt(Math.random()* 999) + 1;
+    // let randomRoom = parseInt(Math.random()* 999) + 1;
 
     if(user.redirect){
         return EXIT();
@@ -121,6 +126,14 @@ export default function yourProfile(props){
         }
     }
 
+    function ButtonAdmin(){
+        return <Button onClick={()=>{
+                console.log("Create new chat room");
+                setModalVisible(!isModalVisible);
+            }}>Create New Chat Room
+        </Button>
+    }
+
     
     return <>
         
@@ -128,7 +141,7 @@ export default function yourProfile(props){
         {isModalVisible ? <ModalWindow isVisible={isModalVisible} changeState = {setModalVisible}/> : ''}
 
         <ContentWrapper>
-            <ContentPart>
+            <ContentPart style={{backgroundColor:"#f8c2c287",borderRadius:'1rem'}}>
                 <UserWrap>
                     <AvatarWrap onClick={()=>{
                         console.log("CHANGE AVATAR IN PROGRESS");
@@ -145,27 +158,25 @@ export default function yourProfile(props){
                 
             </ContentPart>
             <ContentPart style={{backgroundColor:"#5195a487"}}>
-                <Paragraph>
-                    Log out in  
-                        <Timer time={user.timeCookies} exit = {EXIT}></Timer> 
-                     min
-                </Paragraph>
 
                 <Button onClick={()=>{
 
                     deleteAllCookies();
                     setUser({redirect:true});
 
-                }}>Delete cookies</Button>
+                }}>Exit</Button>
 
                 <br/>
 
-                <Button onClick={()=>{
-                    console.log("Create new chat room");
-                    setModalVisible(!isModalVisible);
-                }}>Create New Chat Room</Button>
 
-                <Link to={'/chatRoom/'+randomRoom}> join to room {randomRoom}</Link>
+                {user.admin ? <ButtonAdmin/> :''}
+                
+                <br/>
+                <Link to={'/chatRoom/public'}>
+                    <Button>
+                        join to public room
+                    </Button>
+                </Link>
             </ContentPart>
         </ContentWrapper>
     </>

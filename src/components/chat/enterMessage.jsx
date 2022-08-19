@@ -36,33 +36,64 @@ const TextArea_custom = styled.textarea`
 
 export default function enterMessage(props){
 
-    const {socket} = props;
+    const { Manager,setMessages,YourName,messages } = props;
+
+    const socket = Manager.socket("/707");
+
+    socket.on('answerForRoom707',(message)=>{
+
+        // console.log(message);
+        message = JSON.parse(message);
+        
+        let newMessage = [];
+
+        if(message.who === YourName){
+        }else{
+            let tempArr = createObjMessage(message.msg,message.who);
+
+            newMessage.push(tempArr);
+        }
+        setMessages([...messages, ...newMessage]);
+
+        
+    })
 
 
     function HadleSubmitMessage(e){
         if(e.key == 'Enter'){
             let msg = e.target.value;
             // console.log(msg);
-            let newMess = CreateObjMess(msg,props.YourName,true);
-            // setMessages([...messages,newMess]);
-            // props.WS.on('open', function open() {
-                
-            // });
+            let newMessage = createObjMessage(msg,YourName,true);           
 
-            props.setMessages([...props.messages,newMess]);
+            // console.log(newMessage.time,Object.keys(newMessage.time));
+
+            setMessages([...messages,newMessage]);
+
+            newMessage = JSON.stringify(newMessage);
+
+            // console.log(newMessage);
+
+            socket.emit("messageInRomm707", newMessage);
             e.target.value = '';
         }else{
             return;
         }
     }
 
-    function CreateObjMess(mess,who,MySelf = false){
-        let DATE = new Date();
+    function createObjMessage(mess,who,me = false){
+        let curentTime = new Date();
         return {
             msg:mess,
             who:who,
-            time:{h:DATE.getHours(),m:DATE.getMinutes()},
-            myself:MySelf,
+            time:{
+                h:curentTime.getHours(),
+                m:curentTime.getMinutes(),
+                day:curentTime.getUTCDate(),
+                month:curentTime.getMonth(),
+                year:curentTime.getFullYear(),
+                ms:curentTime.getTime(),
+            },
+            me:me,
         }
     }
     
