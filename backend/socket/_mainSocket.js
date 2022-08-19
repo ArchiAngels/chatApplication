@@ -3,11 +3,14 @@ const onLeave = require('./scripts/leave.js').leavePublicRoom;
 const askMsg = require('./scripts/getMessages.js').getMessage;
 
 module.exports = function socket(){
+    const {createServer} = require('https');
     const { Server } = require("socket.io");
+
+    let httpsServer = createServer().listen(8080);
 
     let usersInRoom = [];
 
-    const io = new Server(8080, { 
+    const io = new Server(httpsServer, { 
         cors:{
             "Access-Control-Allow-Origin":"*"
         }
