@@ -3,15 +3,10 @@ const onLeave = require('./scripts/leave.js').leavePublicRoom;
 const askMsg = require('./scripts/getMessages.js').getMessage;
 
 module.exports = function socket(){
-    const {createServer} = require('https');
+    const {createServer} = require('http');
     const { Server } = require("socket.io");
-
-    const options = {
-        key: process.env.key_pem,
-        cert:process.env.cert_pem
-    };
-
-    let httpsServer = createServer(options);
+    
+    let httpsServer = createServer();
 
     let usersInRoom = [];
 
