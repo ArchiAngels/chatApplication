@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Message from './components/chat/message.jsx';
 import EnterMessage from './components/chat/enterMessage.jsx';
 import {PopUp,swap} from './components/chat/popUp.jsx';
+import TimeSent from './components/chat/timeMessage.jsx';
 
 
 
@@ -55,13 +56,15 @@ const HistoryChat = styled.div`
 `;
 
 
+
+
 export default function App(props) {
 
     console.log('app drawed')
 
     
     let [messages,setMessages] = React.useState(props.message || []);
-    let [offset,setOffset] = React.useState([5,0]);
+    let [offset,setOffset] = React.useState([8,0]);
     let histroyMessRef = React.useRef(null);
     let downLoadMess = React.createRef();
     let newMessage = React.createRef();
@@ -69,12 +72,14 @@ export default function App(props) {
     let YourName = props.nickname || 'You';
     let loading = false;
 
+    let lastWritenDay = null;
+
     const {Manager,ifOnTop} = props;
 
 
     React.useEffect(()=>{
 
-        if(offset[0] === 5){
+        if(offset[0] === 8){
             histroyMessRef.current.scrollBy(0,histroyMessRef.current.offsetHeight);
         }
         // swap(loading);
@@ -135,17 +140,29 @@ export default function App(props) {
                 <PopUp text={'load oldest messages'} ref={downLoadMess}/>
 
                 <HistoryChat onScroll={handleScroll} ref={histroyMessRef}>
+
                     {messages.map((e,i)=>{
-                        return <Message who={e.who} msg={e.msg} time={e.time} me={YourName} key={i+'x'}/>
+                        let canBePrinted = true;
+                        if(lastWritenDay === null || lastWritenDay !== e.time.day){
+                            lastWritenDay = e.time.day;
+                        }else{
+                            canBePrinted = false
+                        }
+                        return <div key={i+'xxx'}>
+                                <TimeSent date={{...e.time,paint:canBePrinted}} key = {i+'xx'}/>
+                                <Message who={e.who} msg={e.msg} time={e.time} me={YourName} key={i+'x'}/>
+                            </div>
+                        
                     })}
+
+
                 </HistoryChat>
 
                 <PopUp text={'you have new message'} ref={newMessage}/>
 
                 <EnterMessage setMessages = {setMessages} messages = {messages} YourName={YourName} Manager={Manager}/>
             </ChatContainer>
-        </Wrapper>
-        
+        </Wrapper>        
     </>
 }
   

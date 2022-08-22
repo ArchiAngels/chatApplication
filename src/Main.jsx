@@ -19,10 +19,9 @@ import Timer from "./components/other/timer.jsx";
 
 import { Manager } from 'socket.io-client';
 
-let host = 'swetty.herokuapp.com';
-// let host = 'localhost'
-// let port = process.env.PORT || 3030
-const manager = new Manager(`wss://${host}`,{
+// let host = 'swetty.herokuapp.com';
+let host = 'localhost:3030';
+const manager = new Manager(`ws://${host}`,{
   path:"/ws"
 });
 

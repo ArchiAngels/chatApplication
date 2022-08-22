@@ -113,7 +113,7 @@ export default function ChatRoom(props){
                     setUser(cookies.value);
                     getData();
                     async function getData(){
-                        let result = await getHistory(5,0);
+                        let result = await getHistory(8,0);
                         // console.log(result);
                         setlistMessages(result);
                     }
